@@ -1,3 +1,4 @@
+import sys
 from pymongo import MongoClient
 '''Inserting going to be manual --> adding everything from the knowledge base'''
 
@@ -9,23 +10,34 @@ procedures = db["procedures"]
 transformations = db["transformations"]
 
 kb_item = {}
-flag = True
+main = True
 
-while (flag):
-	item_type = raw_input('Enter item type: ')
+ans = raw_input('\nAutomation? [y/n]')
+if ans[0].lower() == 'y':
+	sys.stdin = open('./input.txt')
+
+while (main):
+	item_type = raw_input('\nEnter item type: ')
 
 	if item_type[0].lower() == 'i':
 		# get ingredient name, category, and dietary flags
-		name = raw_input('Enter ingredient name (type exit to leave): ')	
+		name = raw_input('\nEnter ingredient name (type exit to leave): ')	
 		if (name.upper() == 'EXIT'):
 			break	
-		category = raw_input('Enter ingredient category: ')
+		cursor = db.ingredients.find({"name":name})
+		try:
+			if cursor[0] != None:
+				print 'Item already in database -- Replacing with new one'
+				db.ingredients.remove(cursor[0])
+		except Exception, e:
+			print str(e)
+		category = raw_input('\nEnter ingredient category: ')
 		flags = []
 		flag_cont = True
 		while (flag_cont):
-			flag = raw_input('Enter ingredient dietary flag (only one - will prompt for more): ')
+			flag = raw_input('\nEnter ingredient dietary flag (only one - will prompt for more): ')
 			flags.append(flag)
-			cont = raw_input('More flags? [y/n] ')
+			cont = raw_input('\nMore flags? [y/n] ')
 			if (cont.upper() == 'N'):
 				flag_cont = False
 		# insert item in ingredient collection
@@ -34,26 +46,40 @@ while (flag):
 
 	elif item_type[0].lower() == 'p':
 		# get procedure name, category
-		name = raw_input('Enter procedure name (type exit to leave): ')	
+		name = raw_input('\nEnter procedure name (type exit to leave): ')	
 		if (name.upper() == 'EXIT'):
 			break	
-		category = raw_input('Enter procedure category: ')
+		cursor = db.procedures.find({"name":name})
+		try:
+			if cursor[0] != None:
+				print 'Item already in database -- Replacing with new one'
+				db.procedures.remove(cursor[0])
+		except Exception, e:
+			print str(e)
+		category = raw_input('\nEnter procedure category: ')
 		kb_item = {'name':name,'category':category}
 		# insert item in procedure collection
 		db.procedures.insert(kb_item)
 
 	elif item_type[0].lower() == 't':
 		# get transformation name, type, actions
-		name = raw_input('Enter transformation name (type exit to leave): ')	
+		name = raw_input('\nEnter transformation name (type exit to leave): ')	
 		if (name.upper() == 'EXIT'):
 			break	
-		category = raw_input('Enter transformation type: ')
+		cursor = db.transformations.find({"name":name})
+		try:
+			if cursor[0] != None:
+				print 'Item already in database -- Replacing with new one'
+				db.transformations.remove(cursor[0])
+		except Exception, e:
+			print str(e)
+		category = raw_input('\nEnter transformation type: ')
 		actions = []
 		act_cont = True
 		while (act_cont):
-			action = raw_input('Enter transformation action (only one - will prompt for more): ')
+			action = raw_input('\nEnter transformation action (only one - will prompt for more): ')
 			actions.append(action)
-			cont = raw_input('More actions? [y/n] ')
+			cont = raw_input('\nMore actions? [y/n] ')
 			if (cont.upper() == 'N'):
 				act_cont = False
 		#insert item in transformation collection
@@ -62,9 +88,9 @@ while (flag):
 	else:
 		print 'Invalid item type'
 
-	cont = raw_input('More items? [y/n] ')
+	cont = raw_input('\nMore items? [y/n] ')
 	if (cont.upper() == 'N'):
-		flag = False
+		main = False
 
 
 ingredients = db.ingredients.find()
@@ -85,17 +111,17 @@ print '\nTRANSFORMATIONS:\n'
 for record in transformations:
 	print(record['name'] + ',',record['category'] + ',',record['actions'])
 
-cont = raw_input('Any modifications to be made? [y/n] ')
+cont = raw_input('\nAny modifications to be made? [y/n] \n')
 if (cont.upper() == 'N'):
 	cont = False
 else:
 	cont = True
 
 while(cont):
-	item_type = raw_input('Item type to modify: ')
+	item_type = raw_input('\nItem type to modify: ')
 
 	if item_type[0].lower() == 'i':
-		name = raw_input('ingredient name to modify (exit to leave): ')
+		name = raw_input('\ningredient name to modify (exit to leave): ')
 		if (name.upper() == 'EXIT'):
 			break
 		cursor = db.ingredients.find({"name":name})
@@ -107,25 +133,25 @@ while(cont):
 		flags = document['flags']
 		mod = True
 		while(mod):
-			field = raw_input('Which field would you like to modify? ')
+			field = raw_input('\nWhich field would you like to modify? ')
 			if field.lower() == 'name':
-				name = raw_input('New ingredient name: ')
+				name = raw_input('\nNew ingredient name: ')
 			elif field.lower() == 'category':
-				category = raw_input('New ingredient category: ')
+				category = raw_input('\nNew ingredient category: ')
 			elif field.lower() == 'flags':
 				print 'This will replace all flags - add one by one'
 				flags = []
 				flag_cont = True
 				while (flag_cont):
-					flag = raw_input('New ingredient dietary flag: ')
+					flag = raw_input('\nNew ingredient dietary flag: ')
 					flags.append(flag)
-					cont = raw_input('More flags? [y/n] ')
+					cont = raw_input('\nMore flags? [y/n] ')
 					if (cont.upper() == 'N'):
 						flag_cont = False
 			else:
 				print 'Invalid field name'
 
-			mod = raw_input('Any other field to modify? [y/n] ')
+			mod = raw_input('\nAny other field to modify? [y/n] ')
 			if mod.lower() == 'n':
 				mod = False
 		db.ingredients.update_one({"_id":doc_id},
@@ -138,7 +164,7 @@ while(cont):
 		print db.ingredients.find({"_id":doc_id})[0]
 
 	if item_type[0].lower() == 'p':
-		name = raw_input('Procedure name to modify (exit to leave): ')
+		name = raw_input('\nProcedure name to modify (exit to leave): ')
 		if (name.upper() == 'EXIT'):
 			break
 		cursor = db.procedures.find({"name":name})
@@ -149,15 +175,15 @@ while(cont):
 		category = document['category']
 		mod = True
 		while(mod):
-			field = raw_input('Which field would you like to modify? ')
+			field = raw_input('\nWhich field would you like to modify? ')
 			if field.lower() == 'name':
-				name = raw_input('New procedure name: ')
+				name = raw_input('\nNew procedure name: ')
 			elif field.lower() == 'category':
-				category = raw_input('New procedure category: ')
+				category = raw_input('\nNew procedure category: ')
 			else:
 				print 'Invalid field name'
 
-			mod = raw_input('Any other field to modify? [y/n] ')
+			mod = raw_input('\nAny other field to modify? [y/n] ')
 			if mod.lower() == 'n':
 				mod = False
 		db.ingredients.update_one({"_id":doc_id},
@@ -169,7 +195,7 @@ while(cont):
 		print db.ingredients.find({"_id":doc_id})[0]
 
 	if item_type[0].lower() == 't':
-		name = raw_input('transformation name to modify (exit to leave): ')
+		name = raw_input('\ntransformation name to modify (exit to leave): ')
 		if (name.upper() == 'EXIT'):
 			break
 		cursor = db.transformations.find({"name":name})
@@ -181,25 +207,25 @@ while(cont):
 		actions = document['actions']
 		mod = True
 		while(mod):
-			field = raw_input('Which field would you like to modify? ')
+			field = raw_input('\nWhich field would you like to modify? ')
 			if field.lower() == 'name':
-				name = raw_input('New transformation name: ')
+				name = raw_input('\nNew transformation name: ')
 			elif field.lower() == 'category':
-				category = raw_input('New transformation type: ')
+				category = raw_input('\nNew transformation type: ')
 			elif field.lower() == 'actions':
 				print 'This will replace all actions - add one by one'
 				actions = []
 				act_cont = True
 				while (act_cont):
-					action = raw_input('New transformation action: ')
+					action = raw_input('\nNew transformation action: ')
 					actions.append(action)
-					cont = raw_input('More actions? [y/n] ')
+					cont = raw_input('\nMore actions? [y/n] ')
 					if (cont.upper() == 'N'):
 						act_cont = False
 			else:
 				print 'Invalid field name'
 
-			mod = raw_input('Any other field to modify? [y/n] ')
+			mod = raw_input('\nAny other field to modify? [y/n] ')
 			if mod.lower() == 'n':
 				mod = False
 		db.ingredients.update_one({"_id":doc_id},
@@ -211,7 +237,7 @@ while(cont):
 		                          	}})
 		print db.ingredients.find({"_id":doc_id})[0]
 
-	cont = raw_input('Modify another item? [y/n] ')
+	cont = raw_input('\nModify another item? [y/n] \n')
 	if cont.lower() == 'n':
 		cont = False
 		ingredients = db.ingredients.find()
