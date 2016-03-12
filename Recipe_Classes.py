@@ -9,12 +9,14 @@ class recipe:
 
 class ingredient:
 	db_link = ''
+	name = ''
 	amount = 0
 	amount_unit = ''
 	state = ''
 
 class procedure:
 	db_link = ''
+	name = ''
 	in_list = ingredients[]
 	time = ''
 	temp = ''
