@@ -18,6 +18,7 @@ class procedure:
 	in_list = ingredients[]
 	time = ''
 	temp = ''
+	cookware = ''
 
 
 
