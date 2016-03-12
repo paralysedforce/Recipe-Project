@@ -14,9 +14,9 @@ procedures = db["procedures"]
 transformations = db["transformations"]
 
 def transform(recipe r, i):
-	if i == 'pescatarian':
+	if i == 'pescetarian':
 		r = pescatarianize(r)
-	if i == 'vegatarian'
+	if i == 'vegetarian'
 		r = vegatarianize(r)
 	if i == 'east asian':
 		r = eastasianize(r)
