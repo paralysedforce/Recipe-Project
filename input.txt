@@ -1,95 +1,131 @@
 i
-Butter
-Dairy
-Dairy
-y
-!Vegan
+butter
+dairy
+animal product
 n
 y
 i
-Garlic
-Seasoning
-None
+garlic
+seasoning
+none
 n
 y
 i
-Soy Sauce
-Seasoning/Sauce
-Asian
+soy sauce
+seasoning/sauce
+east asian
+y
+salty
 n
 y
 i
-Pepper
-Seasoning/Spice
-None
+pepper
+seasoning/spice
+none
 n
 y
 i
-Parsley
-Seasoning/Herb
-None
+parsley
+seasoning/spice
+italian
 n
 y
 i
-Chicken
-Protein
-!Vegan
+chicken
+protein
+meat
 y
-!Vegetarian
+animal product
 n
 y
 i
-Salt
-Seasoning
-None
+salt
+seasoning
+salty
 n
 y
 i
-Beef
-Protein
-!Vegan
+beef
+protein
+meat
 y
-!Vegetarian
+animal product
 n
 y
 i
-Fish
-Protein
-!Vegan
+fish
+protein/fish
+animal product
 y
-!Vegetarian
+meat
 n
 y
 i
-Turkey
-Protein
-!Vegan
+turkey
+protein
+animal product
 y
-!Vegetarian
+meat
 n
 y
 i
-Egg
-Protein
-!Vegan
+egg
+protein
+animal product
 n
 y
 i
-Milk
-Dairy
-!Vegan
+milk
+dairy
+animal product
 n
 y
 p
-Sauteing
-Cooking Method
+sautee
+cooking method
 y
-t
-Vegetarian
-Substitution/Dietary Restriction
-replace type:ingredient category:protein flag:!Vegetarian with tofu (maybe functions that we write? I think it is better if we can have some sort of standardized "instructions" that we get from the database)
+p
+bake
+cooking method
 y
-remove type:ingredient flag:!Vegetarian
-n
+p
+grill
+cooking method
+y
+p
+fry
+cooking method
+y
+p
+deep fry
+cooking method
+y
+p
+stir fry
+cooking method
+y
+p
+broil
+cooking method
+y
+p
+slow cook
+cooking method
+y
+p
+boil
+cooking method
+y
+p
+heat
+cooking method
+y
+p
+sear
+cooking method
+y
+p
+braise
+cooking method
 n
 n
