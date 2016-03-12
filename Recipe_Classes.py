@@ -3,6 +3,7 @@
 class recipe:
 	url = ''
 	name = ''
+	transformations = ''
 	original_text = ''
 	parsed_text = ''
 	in_list = ingredients[]
