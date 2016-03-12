@@ -1,10 +1,16 @@
-
+from pymongo import MongoClient
 
 # i is indicator for which transformation to do
 # fucntion for performing tranformations will be found in knowledge base
 # not sure how to access knowledge base yet
 # look into changing portions (easy, and gives extra credit)
 
+client = MongoClient()
+
+db = client["k_base"]
+ingredients = db["ingredients"]
+procedures = db["procedures"]
+transformations = db["transformations"]
 
 def transform(recipe r, i):
 	if i == 'pescatarian':
@@ -123,34 +129,107 @@ def easyize(recipe r):
 #############
 
 
-def replace_ing(ing old, new_name):
-	ing new
+def replace_ing(ingredient old, new_name):
+	ingredient new
 	new.name = new_name
 	new.amount = old.amount
 	new.amount_unit = old.amount_unit
 	return new
 
 def is_cooking_method(procedure p):
+	cursor = db.procedures.find({'name':p.name})
+	document = cursor[0]
+	if document['category'] == 'Cooking Method':
+		return True
+	return False
 
 def replace_proc(procedure p, new_name):
+	procedure new
+	new.name = new_name
+	new.in_list = p.in_list
+	if p.temp == 'low':
+		new.temp = '350F'
+	elif p.temp == 'med':
+		new.temp = '375F'
+	elif p.temp == 'high':
+		new.temp = '400F'
+	else:
+		new.temp = '375F'
+	if p.name == 'Slow Cook':
+		new.time = p.time/12
+	else:
+		new.time = p.time*2
+
 
 def is_starch(ingredient i):
+	cursor = db.procedures.find({'name':i.name})
+	document = cursor[0]
+	if 'Starch' in document['category']:
+		return True
+	return False
 
 def is_east_asian(ingredient i):
+	cursor = db.procedures.find({'name':i.name})
+	document = cursor[0]
+	flags = document['flags']
+	if 'East Asian' in flags:
+		return True
+	return False
 
 def is_salty(ingredient i):
+	cursor = db.procedures.find({'name':i.name})
+	document = cursor[0]
+	flags = document['flags']
+	if 'Salty' in flags:
+		return True
+	return False
 
 def is_italian(ingredient i):
+	cursor = db.procedures.find({'name':i.name})
+	document = cursor[0]
+	flags = document['flags']
+	if 'Italian' in flags:
+		return True
+	return False
 
 def is_fish(ingredient i):
+	cursor = db.procedures.find({'name':i.name})
+	document = cursor[0]
+	if 'Fish' in document['category']:
+		return True
+	return False
 
 def is_meat(ingredient i):
+	cursor = db.procedures.find({'name':i.name})
+	document = cursor[0]
+	flags = document['flags']
+	if 'Meat' in flags:
+		return True
+	return False
 
 def is_protein(ingredient i):
+	cursor = db.procedures.find({'name':i.name})
+	document = cursor[0]
+	if 'Protein' in document['category']:
+		return True
+	return False
+	
 
 def is_spice(ingredient i):
+	cursor = db.procedures.find({'name':i.name})
+	document = cursor[0]
+	if 'Spice' in document['category']:
+		return True
+	return False
+	
 
 def is_sauce(ingredient i):
+	cursor = db.procedures.find({'name':i.name})
+	document = cursor[0]
+	if 'Sauce' in document ['category']:
+		return True
+	return False
+	
 
 
 
