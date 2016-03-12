@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import Recipe_Classes
 
 # i is indicator for which transformation to do
 # fucntion for performing tranformations will be found in knowledge base
