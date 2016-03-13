@@ -18,13 +18,13 @@ def transform(r):
 	i = r.transformation
 	if i.lower() == 'pescetarian':
 		ret = pescatarianize(r)
-	elif i.lower() == 'vegetarian'
+	elif i.lower() == 'vegetarian':
 		ret = vegatarianize(r)
 	elif i.lower() == 'east asian':
 		ret = eastasianize(r)
 	elif i.lower() == 'italian':
 		ret = italianize(r)
-	elif i.lower() = 'easy':
+	elif i.lower() == 'easy':
 		ret = easyize(r)
 	elif i.lower() == 'low sodium':
 		ret = lowsodiumize(r)
@@ -45,7 +45,7 @@ def pescatarianize(r):
 	i = 0
 	for ing in r.in_list:
 		if is_protein(ing):
-			if !is_fish():
+			if not is_fish():
 				r.in_list[i] = replace_ing(ing, 'cod')
 				i+=1
 
@@ -59,7 +59,7 @@ def eastasianize(r):
 	asian_sauces = ['soy sauce', 'sesame oil', 'fish sauce', 'rice wine']
 	for ing in r.in_list:
 		if is_spice(ing):
-			if !is_east_asian(ing):
+			if not is_east_asian(ing):
 				if j>=len(asian_spices):
 					del r.in_list[i]
 					i-=1
@@ -67,7 +67,7 @@ def eastasianize(r):
 					r.in_list[i] = replace_ing(ing, asian_spices[j])
 				j+=1	
 		if is_sauce(ing):
-			if !is_east_asian(ing):
+			if not is_east_asian(ing):
 				if k>=len(asian_sauces):
 					del r.in_list[i]
 					i-=1
@@ -84,7 +84,7 @@ def italianize(r):
 	italian_sauces = ['alfredo sauce']
 	for ing in r.in_list:
 		if is_spice(ing):
-			if !is_italian(ing):
+			if not is_italian(ing):
 				if j>=len(italian_spices):
 					del r.in_list[i]
 					i-=1
@@ -134,11 +134,7 @@ def easyize(r):
 
 
 def replace_ing(old, new_name):
-	ingredient new
-	new.name = new_name
-	new.amount = old.amount
-	new.amount_unit = old.amount_unit
-	return new
+	return Ingredient(new_name, old.amount, old.amount_unit)
 
 def is_cooking_method(p):
 	cursor = db.procedures.find({'name':p.name})
@@ -148,23 +144,25 @@ def is_cooking_method(p):
 	return False
 
 def replace_proc(p, new_name):
-	procedure new
-	new.name = new_name
-	new.in_list = p.in_list
+	new_temp = ''
 	if p.temp == 'low':
-		new.temp = '350F'
+		new_temp = '350F'
 	elif p.temp == 'med':
-		new.temp = '375F'
+		new_temp = '375F'
 	elif p.temp == 'high':
-		new.temp = '400F'
+		new_temp = '400F'
 	else:
-		new.temp = '375F'
+		new_temp = '375F'
+
+	new_time = 0
 	if p.name == 'slow cook':
-		new.time = p.time/12
+		new_time = p.time/12
 	else:
-		new.time = p.time*2
-	new.cookware = '9"x13" baking pan'
-	return new
+		new_time = p.time*2
+
+	new_cookware = '9"x13" baking pan'	
+	
+	return Procedure(new_name, p.in_list, new_cookware, new_time, new_temp)
 
 def is_starch(i):
 	cursor = db.procedures.find({'name':i.name})

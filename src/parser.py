@@ -126,7 +126,7 @@ def main(original_recipe):
     #         'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/',
     #         'http://allrecipes.com/Recipe/Baked-Lemon-Chicken-with-Mushroom-Sauce/',
     #         'http://allrecipes.com/Recipe/Meatball-Nirvana/']
-    steps = scrape.scrape(url)
+    steps = scrape.scrape(original_recipe.url)
     original_recipe.parsed_text = steps
     all_ing = []
     all_proc = []
@@ -169,5 +169,5 @@ def main(original_recipe):
 
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

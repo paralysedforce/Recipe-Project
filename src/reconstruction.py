@@ -33,7 +33,7 @@ def reconstruct(r):
 		if is_cooking_method(proc):
 			line.append('with ' + proc.cookware + ',' + proc.name + ' ' + ''.join([i + ' and ' for i in proc.in_list]) + '.')
 		else:
-			line.append(proc.name + ' ' + (for i in proc.in_list i + ' and ') + '.')
+			line.append(proc.name + ' ' + ''.join([i + ' and ' for i in proc.in_list]) + '.')
 		fs.append(line + '\n')
 		i+=1
 	print(fs)
