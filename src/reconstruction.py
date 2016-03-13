@@ -11,11 +11,11 @@ import transform
 
 def reconstruct(r):
 	fs = ''
-	fs.append(r.name + '    ' + 'transformed to fit the following criteria: ' + r.transormation + '\n\nIngredients.\n')
+	fs += r.name + '    ' + 'transformed to fit the following criteria: ' + r.transformation + '\n\nIngredients:\n'
 	for ing in r.in_list:
-		line = '\t-' + ing.name + '  ' + ing.amount + ' ' + ing.amount_unit +'\n'
-		fs.append(line)
-	fs.append('\nSteps\n')
+		line = '\t-' + ing.name + '  ' + str(ing.amount) + ' ' + ing.amount_unit +'\n'
+		fs += line
+	fs += '\nSteps:\n'
 	tr = ['Next', 'Now', 'After that']
 	i = 1
 	j = 0
@@ -28,15 +28,15 @@ def reconstruct(r):
 		else:
 			if j>=len(tr):
 				j = 0
-			line.append(tr[j])
+			line += tr[j]
 			j+=1
-		if is_cooking_method(proc):
-			line.append('with ' + proc.cookware + ',' + proc.name + ' ' + ''.join([i + ' and ' for i in proc.in_list]) + '.')
+		if transform.is_cooking_method(proc):
+			line += 'with ' + ''.join([i_ + ' and ' for i_ in proc.cookware]) + ',' + proc.name + ' '.join([i_ + ' and ' for i_ in proc.in_list]) + ' for ' + proc.time + ' at ' + proc.temp + '.'
 		else:
-			line.append(proc.name + ' ' + ''.join([i + ' and ' for i in proc.in_list]) + '.')
-		fs.append(line + '\n')
-		i+=1
-	print(fs)
+			line += proc.name + ' ' + ''.join([i_ + ' and ' for i_ in proc.in_list]) + '.'
+		fs += line + '\n'
+		i += 1
+	print str(fs)
 
 
 		

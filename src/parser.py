@@ -3,6 +3,7 @@
 from data import *
 
 import scrape
+import sys
 from collections import namedtuple
 from string import punctuation, ascii_lowercase
 import re
@@ -19,23 +20,22 @@ ingredients = db["ingredients"]
 procedures = db["procedures"]
 transformations = db["transformations"]
 
-Quantity = namedtuple("Quantity", ["value", "unit"])
-Ingredient = namedtuple("Ingredient", ['name', 'quantity', 'descriptors'])
-Step = namedtuple("Step", ["ingredients", "processes", "cookware"])
+# Quantity = namedtuple("Quantity", ["value", "unit"])
+# Ingredient = namedtuple("Ingredient", ['name', 'quantity', 'descriptors'])
+# Step = namedtuple("Step", ["ingredients", "processes", "cookware"])
 
 #TODO: unit tests for recipes
 #TODO: improve recognize_descriptors
 
-def parse_ingredients(ingredients):
+def parse_ingredient(ingredients):
     """ingredients is a string scraped from the web site. This function
     processes the string and returns an ingredient object"""
     number = recognize_number(ingredients)
     unit = recognize_unit(ingredients)
-    quantity = Quantity(number, unit)
-
     ingredient_name = recognize_ingredient(ingredients)
-    descriptors = recognize_descriptors(ingredients)
-    ingredient = Ingredient(ingredient_name, quantity, descriptors)
+    # descriptors = recognize_descriptors(ingredients)
+
+    ingredient = recipe_classes.Ingredient(ingredient_name, number, unit)
     return ingredient
 
 def recognize_number(ingredients):
@@ -84,7 +84,7 @@ def recognize_descriptors(ingredients, data = None):
 
 # Step parsing
 def parse_step(step):
-    step_procedres = []
+    step_procedures = []
     step_ingredients = []
     step_cookware = []
 
@@ -113,9 +113,17 @@ def parse_step(step):
         if document['name'] in step:
             step_cookware.append(document['name'])
 
-    return [step_ingredients, step_directions, step_cookware]
 
+    #GET TIME AND TEMP FROM STEP
+    time = '100 minutes'
+    temp = '100F'
+    if not step_procedures:
+        step_procedures = ['placeholder proc']
+    proc = recipe_classes.Procedure(step_procedures[0], step_ingredients, step_cookware, time, temp)
+    return proc
 
+# def recognize_time(step):
+# def recognize_temp(step):
 
 ## Helper
 def _strip_punctuation(string):
@@ -126,43 +134,69 @@ def main(original_recipe):
     #         'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/',
     #         'http://allrecipes.com/Recipe/Baked-Lemon-Chicken-with-Mushroom-Sauce/',
     #         'http://allrecipes.com/Recipe/Meatball-Nirvana/']
-    steps = scrape.scrape(original_recipe.url)
-    original_recipe.parsed_text = steps
-    all_ing = []
-    all_proc = []
-    i = 0
-    for step in steps:
-        print step
+    scraped_info = scrape.scrape(original_recipe.url)
+    scraped_ing = scraped_info[0]
+    scraped_steps = scraped_info[1]
 
-        step_tuple = parse_step(step)
-        ingredients = step_tuple[0]
-        procedures = step_tuple[1]
-        cookware = step_tuple[2]
-        step_ing = []
-        step_proc = []
-        step_cw = []
+    # parse ingredient info, create objects
+    ingredients = []
+    for ingredient in scraped_ing:
+        ing_info = ingredient.contents
+        new_ing = parse_ingredient(ing_info[0])
+        cursor = db.ingredients.find({"name":new_ing.name})
+        i = 0
+        for document in cursor:
+            i += 1
+        if i == 0:
+            # add to DB
+            db.ingredients.insert({"name":new_ing.name})
+        ingredients.append(new_ing)
 
-        for ingredient in ingredients:
-            step_ing.append(Ingredient(ingredient)) #get amounts?
-        for cw in cookware:
-            step_cw.append(cw)
-        for proc in procedures:
-            step_proc.append(Procedure(proc, step_ing, step_cw)) #get time/temp?
+    steps = []
+    for step in scraped_steps:
+        step_info = step.contents
+        if not step_info:
+            continue # HANDLE EMPTY
+        new_proc = parse_step(step_info[0])
+        steps.append(new_proc)
 
-        all_ing[i] = step_ing
-        all_proc[i] = step_procedures
-        i += 1
+    # original_recipe.parsed_text = steps
+    # all_ing = []
+    # all_proc = []
+    # i = 0
+    # for step in steps:
+    #     print step
 
-    original_recipe.in_list = all_ing
-    original_recipe.pr_list = all_proc
+    #     step_tuple = parse_step(step)
+    #     ingredients = step_tuple[0]
+    #     procedures = step_tuple[1]
+    #     cookware = step_tuple[2]
+    #     step_ing = []
+    #     step_proc = []
+    #     step_cw = []
+
+    #     for ingredient in ingredients:
+    #         step_ing.append(Ingredient(ingredient)) #get amounts?
+    #     for cw in cookware:
+    #         step_cw.append(cw)
+    #     for proc in procedures:
+    #         step_proc.append(Procedure(proc, step_ing, step_cw)) #get time/temp?
+
+    #     all_ing[i] = step_ing
+    #     all_proc[i] = step_procedures
+    #     i += 1
+
+    original_recipe.in_list = ingredients
+    original_recipe.pr_list = steps
 
     #call transform etc
     try:
-        transformed_recipe = Transform.transform(original_recipe)
+        transformed_recipe = transform.transform(original_recipe)
     except RuntimeError, e:
         print e
         return original_recipe, Recipe()
 
+    print transformed_recipe
     reconstruction.reconstruct(transformed_recipe)
     return original_recipe, transformed_recipe
 

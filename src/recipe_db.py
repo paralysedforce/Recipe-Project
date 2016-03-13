@@ -102,15 +102,18 @@ print '\n\n---------------------------------\n\n'
 
 print 'INGREDIENTS:\n'
 for record in ingredients:
-	print(record['name'] + ',',record['category'] + ',',record['flags'])
+	# print(record['name'] + ',',record['category'] + ',',record['flags'])
+	print record['name']
 
 print '\nPROCEDURES:\n'
 for record in procedures:
-	print(record['name'] + ',',record['category'])
+	# print(record['name'] + ',',record['category'])
+	print record['name']
 
 print '\nTRANSFORMATIONS:\n'
 for record in transformations:
-	print(record['name'] + ',',record['category'] + ',',record['actions'])
+	# print(record['name'] + ',',record['category'] + ',',record['actions'])
+	print record['name']
 
 cont = raw_input('\nAny modifications to be made? [y/n] \n')
 if (cont.upper() == 'N'):
@@ -249,15 +252,18 @@ while(cont):
 
 		print 'INGREDIENTS:\n'
 		for record in ingredients:
-			print(record['name'] + ',',record['category'] + ',',record['flags'])
+			# print(record['name'] + ',',record['category'] + ',',record['flags'])
+			print record['name']
 
 		print '\nPROCEDURES:\n'
 		for record in procedures:
-			print(record['name'] + ',',record['category'])
+			# print(record['name'] + ',',record['category'])
+			print record['name']
 
 		print '\nTRANSFORMATIONS:\n'
 		for record in transformations:
-			print(record['name'] + ',',record['category'] + ',',record['actions'])
+			# print(record['name'] + ',',record['category'] + ',',record['actions'])
+			print record['name']
 
 # close the connection to MongoDB
 client.close()

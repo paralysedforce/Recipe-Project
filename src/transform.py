@@ -37,9 +37,11 @@ def transform(r):
 def vegatarianize(r):
 	i = 0
 	for ing in r.in_list:
+		print ing
 		if is_meat(ing):
 			r.in_list[i] = replace_ing(ing, 'tofu')
 			i+=1
+	return r
 
 def pescatarianize(r):
 	i = 0
@@ -48,6 +50,7 @@ def pescatarianize(r):
 			if not is_fish():
 				r.in_list[i] = replace_ing(ing, 'cod')
 				i+=1
+	return r
 
 # want to replace spices
 # startch should be rice or noodles
@@ -75,6 +78,7 @@ def eastasianize(r):
 					r.in_list[i] = replace_ing(ing, asian_sauces[k])
 				k+=1
 		i+=1
+	return r
 
 def italianize(r):
 	i = 0
@@ -99,6 +103,7 @@ def italianize(r):
 				r.in_list[k] = replace_ing(ing, italian_spices[k])
 				k+=1
 		i+=1
+	return r
 
 def lowsodiumize(r):
 	i = 0
@@ -119,6 +124,7 @@ def lowcarbize(r):
 				del r.in_list[i]
 				i-=1
 			i+=1
+	return r
 
 def easyize(r):
 	i = 0
@@ -126,6 +132,7 @@ def easyize(r):
 		if is_cooking_method(proc):
 			r.pr_list[i] = replace_proc(proc, 'bake')
 		i+=1
+	return r
 
 
 #############
@@ -134,11 +141,14 @@ def easyize(r):
 
 
 def replace_ing(old, new_name):
-	return Ingredient(new_name, old.amount, old.amount_unit)
+	return recipe_classes.Ingredient(new_name, old.amount, old.amount_unit)
 
 def is_cooking_method(p):
 	cursor = db.procedures.find({'name':p.name})
-	document = cursor[0]
+	try:
+		document = cursor[0]
+	except IndexError:
+		return False
 	if document['category'] == 'cooking method':
 		return True
 	return False
@@ -162,71 +172,98 @@ def replace_proc(p, new_name):
 
 	new_cookware = '9"x13" baking pan'	
 	
-	return Procedure(new_name, p.in_list, new_cookware, new_time, new_temp)
+	return recipe_classes.Procedure(new_name, p.in_list, new_cookware, new_time, new_temp)
 
 def is_starch(i):
-	cursor = db.procedures.find({'name':i.name})
-	document = cursor[0]
+	cursor = db.ingredients.find({'name':i.name})
+	try:
+		document = cursor[0]
+	except IndexError:
+		return False
 	if 'starch' in document['category']:
 		return True
 	return False
 
 def is_east_asian(i):
-	cursor = db.procedures.find({'name':i.name})
-	document = cursor[0]
+	cursor = db.ingredients.find({'name':i.name})
+	try:
+		document = cursor[0]
+	except IndexError:
+		return False
 	flags = document['flags']
 	if 'east asian' in flags:
 		return True
 	return False
 
 def is_salty(i):
-	cursor = db.procedures.find({'name':i.name})
-	document = cursor[0]
+	cursor = db.ingredients.find({'name':i.name})
+	try:
+		document = cursor[0]
+	except IndexError:
+		return False
 	flags = document['flags']
 	if 'salty' in flags:
 		return True
 	return False
 
 def is_italian(i):
-	cursor = db.procedures.find({'name':i.name})
-	document = cursor[0]
+	cursor = db.ingredients.find({'name':i.name})
+	try:
+		document = cursor[0]
+	except IndexError:
+		return False
 	flags = document['flags']
 	if 'italian' in flags:
 		return True
 	return False
 
 def is_fish(i):
-	cursor = db.procedures.find({'name':i.name})
-	document = cursor[0]
+	cursor = db.ingredients.find({'name':i.name})
+	try:
+		document = cursor[0]
+	except IndexError:
+		return False
 	if 'fish' in document['category']:
 		return True
 	return False
 
 def is_meat(i):
-	cursor = db.procedures.find({'name':i.name})
-	document = cursor[0]
-	flags = document['flags']
-	if 'meat' in flags:
-		return True
+	cursor = db.ingredients.find({'name':i.name})
+	try:
+		document = cursor[0]
+		flags = document['flags']
+		if 'meat' in flags:
+			return True
+	except:
+		return False
 	return False
 
 def is_protein(i):
-	cursor = db.procedures.find({'name':i.name})
-	document = cursor[0]
+	cursor = db.ingredients.find({'name':i.name})
+	try:
+		document = cursor[0]
+	except IndexError:
+		return False
 	if 'protein' in document['category']:
 		return True
 	return False
 
 def is_spice(i):
-	cursor = db.procedures.find({'name':i.name})
-	document = cursor[0]
+	cursor = db.ingredients.find({'name':i.name})
+	try:
+		document = cursor[0]
+	except IndexError:
+		return False
 	if 'spice' in document['category']:
 		return True
 	return False
 	
 def is_sauce(i):
-	cursor = db.procedures.find({'name':i.name})
-	document = cursor[0]
+	cursor = db.ingredients.find({'name':i.name})
+	try:
+		document = cursor[0]
+	except IndexError:
+		return False
 	if 'sauce' in document ['category']:
 		return True
 	return False
