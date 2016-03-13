@@ -13,7 +13,7 @@ ingredients = db["ingredients"]
 procedures = db["procedures"]
 transformations = db["transformations"]
 
-def transform(recipe r, i):
+def transform(r, i):
 	if i == 'pescetarian':
 		r = pescatarianize(r)
 	if i == 'vegetarian'
@@ -30,14 +30,14 @@ def transform(recipe r, i):
 		r = lowcalorieize(r)
 
 
-def vegatarianize(recipe r):
+def vegatarianize(r):
 	i = 0
 	for ing in r.in_list:
 		if is_meat(ing):
 			r.in_list[i] = replace_ing(ing, 'tofu')
 			i+=1
 
-def pescatarianize(recipe r):
+def pescatarianize(r):
 	i = 0
 	for ing in r.in_list:
 		if is_protein(ing):
@@ -47,7 +47,7 @@ def pescatarianize(recipe r):
 
 # want to replace spices
 # startch should be rice or noodles
-def eastasianize(recipe r):
+def eastasianize(r):
 	i = 0
 	j = 0
 	k = 0
@@ -72,7 +72,7 @@ def eastasianize(recipe r):
 				k+=1
 		i+=1
 
-def italianize(recipe r):
+def italianize(r):
 	i = 0
 	j = 0
 	k = 0
@@ -97,14 +97,14 @@ def italianize(recipe r):
 		i+=1
 
 
-def lowsodiumize(recipe r):
+def lowsodiumize(r):
 	i = 0
 	for ing in r.in_list:
 		if is_salty(ing):
 			r.in_list[i] = half(ing)
 		i+=1
 
-def lowcarbize(recipe r):
+def lowcarbize(r):
 	i = 0
 	j = 0
 	for ing in r.in_list:
@@ -117,7 +117,7 @@ def lowcarbize(recipe r):
 				i-=1
 			i+=1
 
-def easyize(recipe r):
+def easyize(r):
 	i = 0
 	for proc in r.pr_list:
 		if is_cooking_method(proc):
@@ -130,21 +130,21 @@ def easyize(recipe r):
 #############
 
 
-def replace_ing(ingredient old, new_name):
+def replace_ing(old, new_name):
 	ingredient new
 	new.name = new_name
 	new.amount = old.amount
 	new.amount_unit = old.amount_unit
 	return new
 
-def is_cooking_method(procedure p):
+def is_cooking_method(p):
 	cursor = db.procedures.find({'name':p.name})
 	document = cursor[0]
 	if document['category'] == 'cooking method':
 		return True
 	return False
 
-def replace_proc(procedure p, new_name):
+def replace_proc(p, new_name):
 	procedure new
 	new.name = new_name
 	new.in_list = p.in_list
@@ -164,14 +164,14 @@ def replace_proc(procedure p, new_name):
 	return new
 
 
-def is_starch(ingredient i):
+def is_starch(i):
 	cursor = db.procedures.find({'name':i.name})
 	document = cursor[0]
 	if 'starch' in document['category']:
 		return True
 	return False
 
-def is_east_asian(ingredient i):
+def is_east_asian(i):
 	cursor = db.procedures.find({'name':i.name})
 	document = cursor[0]
 	flags = document['flags']
@@ -179,7 +179,7 @@ def is_east_asian(ingredient i):
 		return True
 	return False
 
-def is_salty(ingredient i):
+def is_salty(i):
 	cursor = db.procedures.find({'name':i.name})
 	document = cursor[0]
 	flags = document['flags']
@@ -187,7 +187,7 @@ def is_salty(ingredient i):
 		return True
 	return False
 
-def is_italian(ingredient i):
+def is_italian(i):
 	cursor = db.procedures.find({'name':i.name})
 	document = cursor[0]
 	flags = document['flags']
@@ -195,14 +195,14 @@ def is_italian(ingredient i):
 		return True
 	return False
 
-def is_fish(ingredient i):
+def is_fish(i):
 	cursor = db.procedures.find({'name':i.name})
 	document = cursor[0]
 	if 'fish' in document['category']:
 		return True
 	return False
 
-def is_meat(ingredient i):
+def is_meat(i):
 	cursor = db.procedures.find({'name':i.name})
 	document = cursor[0]
 	flags = document['flags']
@@ -210,7 +210,7 @@ def is_meat(ingredient i):
 		return True
 	return False
 
-def is_protein(ingredient i):
+def is_protein(i):
 	cursor = db.procedures.find({'name':i.name})
 	document = cursor[0]
 	if 'protein' in document['category']:
@@ -218,7 +218,7 @@ def is_protein(ingredient i):
 	return False
 	
 
-def is_spice(ingredient i):
+def is_spice(i):
 	cursor = db.procedures.find({'name':i.name})
 	document = cursor[0]
 	if 'spice' in document['category']:
@@ -226,7 +226,7 @@ def is_spice(ingredient i):
 	return False
 	
 
-def is_sauce(ingredient i):
+def is_sauce(i):
 	cursor = db.procedures.find({'name':i.name})
 	document = cursor[0]
 	if 'sauce' in document ['category']:
