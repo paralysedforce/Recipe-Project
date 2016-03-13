@@ -70,6 +70,7 @@ starch
 none
 n
 y
+i
 brown sugar
 seasoning/sauce
 none
@@ -995,7 +996,6 @@ protein
 meat
 n
 y
-i
 i
 butter
 dairy
