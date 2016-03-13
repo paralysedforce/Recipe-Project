@@ -1,6 +1,6 @@
 #!usr/bin/python
 
-from data import UNITS, COMMON_INGREDIENTS
+from data import *
 
 from collections import namedtuple
 from string import punctuation, ascii_lowercase
@@ -11,7 +11,7 @@ Quantity = namedtuple("Quantity", ["value", "unit"])
 Ingredient = namedtuple("Ingredient", ['name', 'quantity', 'descriptors'])
 Step = namedtuple("Step", ["ingredients", "processes", "cookware"])
 
-#TODO: parse_steps
+#TODO: unit tests for recipes
 #TODO: improve recognize_descriptors
 
 def parse_ingredients(ingredients):
@@ -48,8 +48,6 @@ def recognize_unit(ingredients):
                 return unit
     return 'unit'
 
-
-
 def recognize_ingredient(ingredients):
     # preprocessing
     proc_ingredients = _strip_punctuation(ingredients.lower())
@@ -72,6 +70,22 @@ def recognize_descriptors(ingredients, data = None):
             descriptors.append(word.lower())
     return descriptors
 
+# Step parsing
+def parse_step(step, ingredients):
+    step_directions = []
+    step_ingredients = []
+    step_cookware = []
+    for direction in DIRECTIONS:
+        if direction in step:
+            step_directions.append(direction)
+    for ingredient in ingredients:
+        if ingredient.name in step:
+            step_ingredients.append(ingredient.name)
+    for cookware in COOKWARE:
+        if cookware in step:
+            step_cookware.append(cookware)
+    return Step(step_ingredients, step_directions, step_cookware)
+
 
 ## Helper
 def _strip_punctuation(string):
@@ -83,9 +97,9 @@ def main():
             'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/',
             'http://allrecipes.com/Recipe/Baked-Lemon-Chicken-with-Mushroom-Sauce/',
             'http://allrecipes.com/Recipe/Meatball-Nirvana/']
-    ingredients, steps =scrape.scrape(urls[3])
-    for ingredient in ingredients:
-        print parse_ingredients(ingredient)
+    ingredients, steps = scrape.scrape(urls[0])
+    for step in steps:
+        print step 
 
 
 if __name__ == "__main__":
