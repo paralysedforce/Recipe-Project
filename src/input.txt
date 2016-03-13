@@ -1029,14 +1029,6 @@ italian
 n
 y
 i
-chicken
-protein
-meat
-y
-animal product
-n
-y
-i
 salt
 seasoning/spice
 salty
@@ -1315,3 +1307,5 @@ seasoning/sauce
 none
 n
 n
+
+
