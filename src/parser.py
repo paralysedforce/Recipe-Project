@@ -2,10 +2,20 @@
 
 from data import *
 
+import scrape
 from collections import namedtuple
 from string import punctuation, ascii_lowercase
 import re
 import nltk
+from pymongo import MongoClient
+import Recipe_Classes
+
+client = MongoClient()
+
+db = client["k_base"]
+ingredients = db["ingredients"]
+procedures = db["procedures"]
+transformations = db["transformations"]
 
 Quantity = namedtuple("Quantity", ["value", "unit"])
 Ingredient = namedtuple("Ingredient", ['name', 'quantity', 'descriptors'])
@@ -71,35 +81,89 @@ def recognize_descriptors(ingredients, data = None):
     return descriptors
 
 # Step parsing
-def parse_step(step, ingredients):
-    step_directions = []
+def parse_step(step):
+    step_procedres = []
     step_ingredients = []
     step_cookware = []
-    for direction in DIRECTIONS:
-        if direction in step:
-            step_directions.append(direction)
-    for ingredient in ingredients:
-        if ingredient.name in step:
-            step_ingredients.append(ingredient.name)
-    for cookware in COOKWARE:
-        if cookware in step:
-            step_cookware.append(cookware)
-    return Step(step_ingredients, step_directions, step_cookware)
+
+    # for direction in DIRECTIONS:
+    #     if direction in step:
+    #         step_directions.append(direction)
+    # for ingredient in ingredients:
+    #     if ingredient.name in step:
+    #         step_ingredients.append(ingredient.name)
+    # for cookware in COOKWARE:
+    #     if cookware in step:
+    #         step_cookware.append(cookware)
+    # return Step(step_ingredients, step_directions, step_cookware)
+
+    ing_cursor = db.ingredients.find()
+    proc_cursor = db.procedures.find()
+    cw_cursor = db.cookware.find()
+
+    for document in ing_cursor:
+        if document['name'] in step:
+            step_ingredients.append(document['name'])
+    for document in proc_cursor:
+        if document['name'] in step:
+            step_procedures.append(document['name'])
+    for document in cw_cursor:
+        if document['name'] in step:
+            step_cookware.append(document['name'])
+
+    return [step_ingredients, step_directions, step_cookware]
+
 
 
 ## Helper
 def _strip_punctuation(string):
     return "".join(char for char in string if char not in punctuation)
 
-def main():
-    import scrape
-    urls = ['http://allrecipes.com/recipe/easy-meatloaf/',
-            'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/',
-            'http://allrecipes.com/Recipe/Baked-Lemon-Chicken-with-Mushroom-Sauce/',
-            'http://allrecipes.com/Recipe/Meatball-Nirvana/']
-    ingredients, steps = scrape.scrape(urls[0])
+def main(original_recipe):
+    # urls = ['http://allrecipes.com/recipe/easy-meatloaf/',
+    #         'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/',
+    #         'http://allrecipes.com/Recipe/Baked-Lemon-Chicken-with-Mushroom-Sauce/',
+    #         'http://allrecipes.com/Recipe/Meatball-Nirvana/']
+    steps = scrape.scrape(url)
+    original_recipe.parsed_text = steps
+    all_ing = []
+    all_proc = []
+    i = 0
     for step in steps:
-        print step 
+        print step
+
+        step_tuple = parse_step(step)
+        ingredients = step_tuple[0]
+        procedures = step_tuple[1]
+        cookware = step_tuple[2]
+        step_ing = []
+        step_proc = []
+        step_cw = []
+
+        for ingredient in ingredients:
+            step_ing.append(Ingredient(ingredient)) #get amounts?
+        for cw in cookware:
+            step_cw.append(cw)
+        for proc in procedures:
+            step_proc.append(Procedure(proc, step_ing, step_cw)) #get time/temp?
+
+        all_ing[i] = step_ing
+        all_proc[i] = step_procedures
+        i += 1
+
+    original_recipe.in_list = all_ing
+    original_recipe.pr_list = all_proc
+
+    #call transform etc
+    try:
+        transformed_recipe = transform(original_recipe)
+    except RuntimeError, e:
+        print e
+        return original_recipe, Recipe()
+
+    return original_recipe, transformed_recipe
+
+
 
 
 if __name__ == "__main__":
