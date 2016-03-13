@@ -973,12 +973,6 @@ meat
 n
 y
 i
-chicken
-protein
-meat
-n
-y
-i
 duck
 protein
 meat
@@ -1321,5 +1315,3 @@ seasoning/sauce
 none
 n
 n
-
-
