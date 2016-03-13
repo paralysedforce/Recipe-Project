@@ -3,6 +3,7 @@
 from collections import namedtuple
 import requests
 from bs4 import BeautifulSoup
+from pymongo import MongoClient
 
 client = MongoClient()
 
@@ -17,7 +18,7 @@ def scrape(url):
     step_strings = soup.findAll('span', class_ = "recipe-directions__list--item")
 
     for ingredient in ingredients:
-    	cursor = db.ingredients.find("name":ingredient)
+    	cursor = db.ingredients.find({"name":ingredient})
     	i = 0
     	for document in cursor:
     		i += 1
