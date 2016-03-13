@@ -8,7 +8,9 @@ from string import punctuation, ascii_lowercase
 import re
 import nltk
 from pymongo import MongoClient
-import Recipe_Classes
+import recipe_classes
+import reconstruction
+import transform
 
 client = MongoClient()
 
@@ -156,11 +158,12 @@ def main(original_recipe):
 
     #call transform etc
     try:
-        transformed_recipe = transform(original_recipe)
+        transformed_recipe = Transform.transform(original_recipe)
     except RuntimeError, e:
         print e
         return original_recipe, Recipe()
 
+    reconstruction.reconstruct(transformed_recipe)
     return original_recipe, transformed_recipe
 
 
