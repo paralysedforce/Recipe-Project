@@ -17,12 +17,12 @@ class Ingredient:
 		self.amount_unit = amount_unit
 
 class Procedure:
-	def __init__(self, name='', in_list=[], time='', temp='', cookware=[]):
-		self.name = ''
-		self.in_list = []
-		self.time = ''
-		self.temp = ''
-		self.cookware = []
+	def __init__(self, name='', in_list=[], cookware=[], time='', temp=''):
+		self.name = name
+		self.in_list = in_list
+		self.time = time
+		self.temp = temp
+		self.cookware = cookware
 
 
 

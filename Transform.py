@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 import Recipe_Classes
+import sys
 
 # i is indicator for which transformation to do
 # fucntion for performing tranformations will be found in knowledge base
@@ -13,22 +14,25 @@ ingredients = db["ingredients"]
 procedures = db["procedures"]
 transformations = db["transformations"]
 
-def transform(r, i):
-	if i == 'pescetarian':
-		r = pescatarianize(r)
-	if i == 'vegetarian'
-		r = vegatarianize(r)
-	if i == 'east asian':
-		r = eastasianize(r)
-	if i == 'italian':
-		r = italianize(r)
-	if i = 'easy':
-		r = easyize(r)
-	if i == 'low sodium':
-		r = lowsodiumize(r)
-	if i == 'low carb':
-		r = lowcalorieize(r)
-
+def transform(r):
+	i = r.transformation
+	if i.lower() == 'pescetarian':
+		ret = pescatarianize(r)
+	elif i.lower() == 'vegetarian'
+		ret = vegatarianize(r)
+	elif i.lower() == 'east asian':
+		ret = eastasianize(r)
+	elif i.lower() == 'italian':
+		ret = italianize(r)
+	elif i.lower() = 'easy':
+		ret = easyize(r)
+	elif i.lower() == 'low sodium':
+		ret = lowsodiumize(r)
+	elif i.lower() == 'low carb':
+		ret = lowcalorieize(r)
+	else:
+		raise RuntimeError('Error! Wrong transformation name')
+	return ret
 
 def vegatarianize(r):
 	i = 0
@@ -96,7 +100,6 @@ def italianize(r):
 				k+=1
 		i+=1
 
-
 def lowsodiumize(r):
 	i = 0
 	for ing in r.in_list:
@@ -163,7 +166,6 @@ def replace_proc(p, new_name):
 	new.cookware = '9"x13" baking pan'
 	return new
 
-
 def is_starch(i):
 	cursor = db.procedures.find({'name':i.name})
 	document = cursor[0]
@@ -216,7 +218,6 @@ def is_protein(i):
 	if 'protein' in document['category']:
 		return True
 	return False
-	
 
 def is_spice(i):
 	cursor = db.procedures.find({'name':i.name})
@@ -225,7 +226,6 @@ def is_spice(i):
 		return True
 	return False
 	
-
 def is_sauce(i):
 	cursor = db.procedures.find({'name':i.name})
 	document = cursor[0]
