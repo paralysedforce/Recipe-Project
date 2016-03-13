@@ -400,7 +400,7 @@ none
 n
 y
 i
-extra-virgin olive oil
+extra virgin olive oil
 seasoning/sauce
 none
 n
@@ -628,7 +628,7 @@ none
 n
 y
 i
-all-purpose flour
+all purpose flour
 starch
 none
 n

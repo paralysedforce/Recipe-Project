@@ -8,6 +8,7 @@ db = client["k_base"]
 ingredients = db["ingredients"]
 procedures = db["procedures"]
 transformations = db["transformations"]
+cookware = db["cookware"]
 
 kb_item = {}
 main = True
