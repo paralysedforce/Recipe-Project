@@ -27,7 +27,7 @@ def main():
                 menu = 0
             continue
         if menu == 0:
-            if command[:30] == "http://allrecipes.com/recipes/":
+            if command[:29] == "http://allrecipes.com/recipe/":
                 URL = command
                 menu += 1
                 continue
