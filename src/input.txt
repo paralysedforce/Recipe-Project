@@ -1091,6 +1091,10 @@ deep fry
 cooking method
 y
 p
+stir
+????
+y
+p
 stir fry
 cooking method
 y
