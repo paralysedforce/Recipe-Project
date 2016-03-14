@@ -149,11 +149,11 @@ def replace_ing(old, new_name):
 def is_cooking_method(p):
 	cursor = db.procedures.find({'name':p.name})
 	try:
-		document = cursor[0]
+		document = cursor[0]		
+		if document['category'] == 'cooking method':
+			return True
 	except IndexError:
 		return False
-	if document['category'] == 'cooking method':
-		return True
 	return False
 
 def replace_proc(p, new_name):
@@ -181,53 +181,54 @@ def is_starch(i):
 	cursor = db.ingredients.find({'name':i.name})
 	try:
 		document = cursor[0]
+		if 'starch' in document['category']:
+			return True
 	except IndexError:
 		return False
-	if 'starch' in document['category']:
-		return True
 	return False
 
 def is_east_asian(i):
 	cursor = db.ingredients.find({'name':i.name})
 	try:
 		document = cursor[0]
+		flags = document['flags']
+		if 'east asian' in flags:
+			return True
 	except IndexError:
 		return False
-	flags = document['flags']
-	if 'east asian' in flags:
-		return True
+	
 	return False
 
 def is_salty(i):
 	cursor = db.ingredients.find({'name':i.name})
 	try:
 		document = cursor[0]
+		flags = document['flags']
+		if 'salty' in flags:
+			return True
 	except IndexError:
-		return False
-	flags = document['flags']
-	if 'salty' in flags:
-		return True
+		return False	
 	return False
 
 def is_italian(i):
 	cursor = db.ingredients.find({'name':i.name})
 	try:
 		document = cursor[0]
+		flags = document['flags']
+		if 'italian' in flags:
+			return True
 	except IndexError:
-		return False
-	flags = document['flags']
-	if 'italian' in flags:
-		return True
+		return False	
 	return False
 
 def is_fish(i):
 	cursor = db.ingredients.find({'name':i.name})
 	try:
 		document = cursor[0]
+		if 'fish' in document['category']:
+			return True
 	except IndexError:
 		return False
-	if 'fish' in document['category']:
-		return True
 	return False
 
 def is_meat(i):
@@ -244,21 +245,21 @@ def is_meat(i):
 def is_protein(i):
 	cursor = db.ingredients.find({'name':i.name})
 	try:
-		document = cursor[0]
+		document = cursor[0]		
+		if 'protein' in document['category']:
+			return True
 	except IndexError:
 		return False
-	if 'protein' in document['category']:
-		return True
 	return False
 
 def is_spice(i):
 	cursor = db.ingredients.find({'name':i.name})
 	try:
 		document = cursor[0]
+		if 'spice' in document['category']:
+			return True
 	except IndexError:
 		return False
-	if 'spice' in document['category']:
-		return True
 	return False
 	
 def is_sauce(i):

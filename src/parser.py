@@ -105,14 +105,16 @@ def parse_step(step):
     ing_cursor = db.ingredients.find()
     proc_cursor = db.procedures.find()
     cw_cursor = db.cookware.find()
-
+    step = step.lower()
     for document in ing_cursor:
         if isinstance(document['name'], basestring):
             if document['name'] in step:
                 step_ingredients.append(document['name'])
     for document in proc_cursor:
         if isinstance(document['name'], basestring):
+            print '\n\n\nPASSED TEST: ', step, '\n', document['name'], '\n'
             if document['name'] in step:
+                print 'FOUND IN STEP', document['name']
                 step_procedures.append(document['name'])
     for document in cw_cursor:
         if isinstance(document['name'], basestring):
@@ -164,8 +166,15 @@ def main(original_recipe):
         step_info = step.contents
         if not step_info:
             continue # HANDLE EMPTY
-        new_proc = parse_step(step_info[0])
-        steps.append(new_proc)
+        step_sent = nltk.sent_tokenize(step_info[0])
+        for sent in step_sent:
+            split_step = sent.split(',')
+            for clause in split_step:
+                clause_step = clause.split(';')
+                for s in clause_step:
+                    print s
+                    new_proc = parse_step(s)
+                    steps.append(new_proc)
 
     original_recipe.in_list = ingredients
     original_recipe.pr_list = steps
