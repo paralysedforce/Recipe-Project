@@ -51,7 +51,6 @@ def recognize_number(ingredients):
         return int(match[0]) + (float(match[1][1:]) / float(match[2][1:]))
     return match
 
-
 def recognize_unit(ingredients):
     for unit in UNITS:
         variations = UNITS[unit]
@@ -161,43 +160,17 @@ def main(original_recipe):
 
     steps = []
     for step in scraped_steps:
+        #SPLIT STEP CONTENTS BEFORE PARSING
         step_info = step.contents
         if not step_info:
             continue # HANDLE EMPTY
         new_proc = parse_step(step_info[0])
         steps.append(new_proc)
 
-    # original_recipe.parsed_text = steps
-    # all_ing = []
-    # all_proc = []
-    # i = 0
-    # for step in steps:
-    #     print step
-
-    #     step_tuple = parse_step(step)
-    #     ingredients = step_tuple[0]
-    #     procedures = step_tuple[1]
-    #     cookware = step_tuple[2]
-    #     step_ing = []
-    #     step_proc = []
-    #     step_cw = []
-
-    #     for ingredient in ingredients:
-    #         step_ing.append(Ingredient(ingredient)) #get amounts?
-    #     for cw in cookware:
-    #         step_cw.append(cw)
-    #     for proc in procedures:
-    #         step_proc.append(Procedure(proc, step_ing, step_cw)) #get time/temp?
-
-    #     all_ing[i] = step_ing
-    #     all_proc[i] = step_procedures
-    #     i += 1
-
     original_recipe.in_list = ingredients
     original_recipe.pr_list = steps
 
     #call transform etc
-
     reconstruction.reconstruct(original_recipe)
     try:
         transformed_recipe = transform.transform(original_recipe)
