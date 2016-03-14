@@ -1,11 +1,11 @@
 #!usr/bin/python
 
 from data import *
-
 import scrape
+
 import sys
-from collections import namedtuple
-from string import punctuation, ascii_lowercase
+#from collections import namedtuple
+from string import punctuation
 import re
 import nltk
 from pymongo import MongoClient
@@ -130,8 +130,22 @@ def parse_step(step):
     proc = recipe_classes.Procedure(step_procedures[0], step_ingredients, step_cookware, time, temp)
     return proc
 
-# def recognize_time(step):
-# def recognize_temp(step):
+def recognize_time(step):
+    processed_step = _strip_punctuation(step.lower()).split()
+    for i in xrange(len(processed_step)):
+        word = processed_step[i]
+        if word in TIME and i > 0:
+            prev_word = processed_step[i-1] 
+            if all(map(lambda c: c in '1234567890' or c in punctuation,
+                prev_word)):
+                return prev_word + ' ' +  word
+
+
+def recognize_temp(step):
+    lower_step = step.lower()
+    if 'degrees' in lower_step:
+        ind = lower_step.split().index('degrees')
+        return " ".join(i for i in step.split()[ind-1: ind+2])
 
 ## Helper
 def _strip_punctuation(string):
@@ -183,8 +197,7 @@ def main(original_recipe):
     reconstruction.reconstruct(original_recipe)
     try:
         transformed_recipe = transform.transform(original_recipe)
-    except RuntimeError, e:
-        print e
+    except RuntimeError:
         return original_recipe, Recipe()
 
     reconstruction.reconstruct(transformed_recipe)
