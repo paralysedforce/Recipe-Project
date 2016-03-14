@@ -62,12 +62,16 @@ def recognize_unit(ingredients):
 def recognize_ingredient(ingredients):
     # preprocessing
     print ingredients
-    proc_ingredients = _strip_punctuation((ingredients.replace('-', ' ')).lower())
-    print proc_ingredients
-    common_ingredients = db.ingredients.find()
-    for ingredient in common_ingredients:
-        if ingredient['name'] in proc_ingredients or ingredient['name'] in ingredients:
-            return ingredient['name']
+    ingredient = _strip_punctuation((ingredients.replace('-', ' ')).lower())
+    print ingredient
+
+    cursor = db.ingredients.find({"name":ingredient})
+    try:
+        document = cursor[0]
+    except:
+        db.ingredients.insert({"name":ingredient, "category":'????', "flags":'none'})
+    finally:
+        return ingredient
 
 def recognize_descriptors(ingredients, data = None):
     stopwords = nltk.corpus.stopwords.words('english')
