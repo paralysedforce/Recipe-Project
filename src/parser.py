@@ -156,15 +156,12 @@ def main(original_recipe):
     #         'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/',
     #         'http://allrecipes.com/Recipe/Baked-Lemon-Chicken-with-Mushroom-Sauce/',
     #         'http://allrecipes.com/Recipe/Meatball-Nirvana/']
-    scraped_info = scrape.scrape(original_recipe.url)
-    scraped_ing = scraped_info[0]
-    scraped_steps = scraped_info[1]
+    scraped_ing, scraped_steps = scrape.scrape(original_recipe.url)
 
     # parse ingredient info, create objects
     ingredients = []
     for ingredient in scraped_ing:
-        ing_info = ingredient.contents
-        new_ing = parse_ingredient(ing_info[0])
+        new_ing = parse_ingredient(scraped_ing)
         cursor = db.ingredients.find({"name":new_ing.name})
         i = 0
         for document in cursor:
