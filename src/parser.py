@@ -62,21 +62,25 @@ def recognize_unit(ingredients):
 
 def recognize_ingredient(ingredients):
     # preprocessing
-    proc_ingredients = _strip_punctuation(ingredients.lower())
-    for ingredient in COMMON_INGREDIENTS:
-        if ingredient in proc_ingredients or ingredient in ingredients:
-            return ingredient
+    print ingredients
+    proc_ingredients = _strip_punctuation((ingredients.replace('-', ' ')).lower())
+    print proc_ingredients
+    common_ingredients = db.ingredients.find()
+    for ingredient in common_ingredients:
+        if ingredient['name'] in proc_ingredients or ingredient['name'] in ingredients:
+            return ingredient['name']
 
 def recognize_descriptors(ingredients, data = None):
     stopwords = nltk.corpus.stopwords.words('english')
     descriptors = []
+    common_ingredients = db.ingredients.find()
 
     for word in ingredients.split():
         stripped = _strip_punctuation(word).lower()
         no_numerals = all(map(lambda c: c not in '123456789', word))
         no_stopwords = not word.lower() in stopwords 
-        no_ingredients = not (stripped in COMMON_INGREDIENTS or word.lower() in
-                COMMON_INGREDIENTS)
+        no_ingredients = not (stripped in common_ingredients or word.lower() in
+                common_ingredients)
         no_units = all([stripped not in UNITS[unit] for unit in UNITS])
         if no_numerals and no_stopwords and no_ingredients and no_units:
             descriptors.append(word.lower())
@@ -104,14 +108,17 @@ def parse_step(step):
     cw_cursor = db.cookware.find()
 
     for document in ing_cursor:
-        if document['name'] in step:
-            step_ingredients.append(document['name'])
+        if isinstance(document['name'], basestring):
+            if document['name'] in step:
+                step_ingredients.append(document['name'])
     for document in proc_cursor:
-        if document['name'] in step:
-            step_procedures.append(document['name'])
+        if isinstance(document['name'], basestring):
+            if document['name'] in step:
+                step_procedures.append(document['name'])
     for document in cw_cursor:
-        if document['name'] in step:
-            step_cookware.append(document['name'])
+        if isinstance(document['name'], basestring):
+            if document['name'] in step:
+                step_cookware.append(document['name'])
 
 
     #GET TIME AND TEMP FROM STEP
@@ -190,13 +197,14 @@ def main(original_recipe):
     original_recipe.pr_list = steps
 
     #call transform etc
+
+    reconstruction.reconstruct(original_recipe)
     try:
         transformed_recipe = transform.transform(original_recipe)
     except RuntimeError, e:
         print e
         return original_recipe, Recipe()
 
-    print transformed_recipe
     reconstruction.reconstruct(transformed_recipe)
     return original_recipe, transformed_recipe
 

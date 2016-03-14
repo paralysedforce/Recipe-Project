@@ -13,9 +13,10 @@ cookware = db["cookware"]
 kb_item = {}
 main = True
 
-ans = raw_input('\nAutomation? [y/n]')
-if ans[0].lower() == 'y':
-	sys.stdin = open('./input.txt')
+# ans = raw_input('\nAutomation? [y/n]')
+# if ans[0].lower() == 'y':
+# 	sys.stdin = open('./input.txt')
+sys.stdin = open('./input.txt')
 
 while (main):
 	item_type = raw_input('\nEnter item type: ')

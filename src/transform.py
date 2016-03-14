@@ -39,8 +39,11 @@ def vegatarianize(r):
 	for ing in r.in_list:
 		print ing
 		if is_meat(ing):
-			r.in_list[i] = replace_ing(ing, 'tofu')
-			i+=1
+			if is_protein(ing):
+				r.in_list[i] = replace_ing(ing, 'tofu')
+			elif is_sauce(ing):
+				r.in_list[i] = replace_ing(ing, 'vegetable broth')
+		i+=1
 	return r
 
 def pescatarianize(r):
@@ -262,10 +265,10 @@ def is_sauce(i):
 	cursor = db.ingredients.find({'name':i.name})
 	try:
 		document = cursor[0]
+		if 'sauce' in document['category']:
+			return True
 	except IndexError:
-		return False
-	if 'sauce' in document ['category']:
-		return True
+		return False	
 	return False
 	
 
