@@ -30,7 +30,7 @@ while (main):
 				# print 'Item already in database -- Replacing with new one'
 				db.ingredients.remove(cursor[0])
 		except Exception, e:
-			# print str(e)
+			print str(e)
 		category = raw_input('\nEnter ingredient category: ')
 		flags = []
 		flag_cont = True
@@ -55,14 +55,14 @@ while (main):
 				# print 'Item already in database -- Replacing with new one'
 				db.procedures.remove(cursor[0])
 		except Exception, e:
-			# print str(e)
+			print str(e)
 		category = raw_input('\nEnter procedure category: ')
 		kb_item = {'name':name,'category':category}
 		# insert item in procedure collection
 		db.procedures.insert(kb_item)
 
 	else:
-		# print 'Invalid item type'
+		print 'Invalid item type'
 
 	cont = raw_input('\nMore items? [y/n] ')
 	if (cont.upper() == 'N'):
