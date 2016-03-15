@@ -146,7 +146,7 @@ def lowcarbize(r):
 			else:
 				del r.in_list[i]
 				i-=1
-			i+=1
+		i+=1
 	return r
 
 def easyize(r):
