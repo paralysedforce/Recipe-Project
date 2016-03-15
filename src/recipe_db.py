@@ -4,7 +4,9 @@ from pymongo import MongoClient
 
 client = MongoClient()
 
+client.drop_database('k_base')
 db = client["k_base"]
+
 
 kb_item = {}
 main = True
@@ -25,10 +27,10 @@ while (main):
 		cursor = db.ingredients.find({"name":name})
 		try:
 			if cursor[0] != None:
-				print 'Item already in database -- Replacing with new one'
+				# print 'Item already in database -- Replacing with new one'
 				db.ingredients.remove(cursor[0])
 		except Exception, e:
-			print str(e)
+			# print str(e)
 		category = raw_input('\nEnter ingredient category: ')
 		flags = []
 		flag_cont = True
@@ -50,17 +52,17 @@ while (main):
 		cursor = db.procedures.find({"name":name})
 		try:
 			if cursor[0] != None:
-				print 'Item already in database -- Replacing with new one'
+				# print 'Item already in database -- Replacing with new one'
 				db.procedures.remove(cursor[0])
 		except Exception, e:
-			print str(e)
+			# print str(e)
 		category = raw_input('\nEnter procedure category: ')
 		kb_item = {'name':name,'category':category}
 		# insert item in procedure collection
 		db.procedures.insert(kb_item)
 
 	else:
-		print 'Invalid item type'
+		# print 'Invalid item type'
 
 	cont = raw_input('\nMore items? [y/n] ')
 	if (cont.upper() == 'N'):
@@ -70,17 +72,17 @@ while (main):
 ingredients = db.ingredients.find()
 procedures = db.procedures.find()
 
-print '\n\n---------------------------------\n\n'
+# print '\n\n---------------------------------\n\n'
 
-print 'INGREDIENTS:\n'
-for record in ingredients:
-	# print(record['name'] + ',',record['category'] + ',',record['flags'])
-	print record['name']
+# print 'INGREDIENTS:\n'
+# for record in ingredients:
+# 	# print(record['name'] + ',',record['category'] + ',',record['flags'])
+# 	print record['name']
 
-print '\nPROCEDURES:\n'
-for record in procedures:
-	# print(record['name'] + ',',record['category'])
-	print record['name']
+# print '\nPROCEDURES:\n'
+# for record in procedures:
+# 	# print(record['name'] + ',',record['category'])
+# 	print record['name']
 
 # cont = raw_input('\nAny modifications to be made? [y/n] \n')
 # if (cont.upper() == 'N'):
