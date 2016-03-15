@@ -10,8 +10,6 @@ import sys
 client = MongoClient()
 
 db = client["k_base"]
-ingredients = db["ingredients"]
-procedures = db["procedures"]
 
 def transform(r):
     i = r.transformation

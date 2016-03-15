@@ -450,91 +450,91 @@ n
 y
 i
 kosher salt
-seasoning/sauce
+seasoning/spice
 salty
 n
 y
 i
 cayenne pepper
-seasoning/sauce
+seasoning/spice
 none
 n
 y
 i
 crushed red pepper
-seasoning/sauce
+seasoning/spice
 none
 n
 y
 i
 cumin
-seasoning/sauce
+seasoning/spice
 none
 n
 y
 i
 coriander
-seasoning/sauce
+seasoning/spice
 none
 n
 y
 i
 paprika
-seasoning/sauce
+seasoning/spice
 none
 n
 y
 i
 rosemary
-seasoning/sauce
+seasoning/spice
 italian
 n
 y
 i
 thyme leaves
-seasoning/sauce
+seasoning/spice
 italian
 n
 y
 i
 cinnamon
-seasoning/sauce
+seasoning/spice
 none
 n
 y
 i
 cloves
-seasoning/sauce
+seasoning/spice
 none
 n
 y
 i
 allspice
-seasoning/sauce
+seasoning/spice
 none
 n
 y
 i
 curry powder
-seasoning/sauce
+seasoning/spice
 none
 n
 y
 i
 italian seasoning
-seasoning/sauce
+seasoning/spice
 italian
 n
 y
 i
 vanilla extract
-seasoning/sauce
+seasoning
 none
 n
 y
 i
 black pepper
-seasoning/sauce
+seasoning/spice
 none
 n
 y
@@ -660,25 +660,55 @@ n
 y
 i
 sharp cheddar cheese
-????
+dairy
 none
 n
 y
 i
 mozzarella cheese
-????
+dairy
 none
 n
 y
 i
 feta cheese
-????
+dairy
+none
+n
+y
+i
+ricotta cheese
+dairy
+italian
+n
+y
+i
+sausage
+protein
+meat
+n
+y
+i
+cloves
+seasoning/spice
+none
+n
+y
+i
+italian seasoning
+seasoning/spice
+italian
+n
+y
+i
+noodles
+starch
 none
 n
 y
 i
 parmesan
-????
+dairy
 italian
 n
 y
@@ -1391,11 +1421,69 @@ dip
 ????
 y
 i
+chicken
+protein
+meat
+n
+y
+i
+lemon slice
+????
+none
+n
+y
+i
+lemon slices
+????
+none
+n
+y
+i
+lime slice
+????
+none
+n
+y
+i
+lime slices
+????
+none
+n
+y
+orange slice
+????
+none
+n
+y
+i
+orange slices
+????
+none
+n
+y
+i
 garlic powder
 ????
 none
 n
 y
+p
+cook
+cooking method
+y
+p
+melt
+cooking method
+y
+p
+place
+????
+y
+p
+season
+????
+y
+p
 i
 tofu
 protein
