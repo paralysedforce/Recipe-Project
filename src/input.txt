@@ -89,7 +89,37 @@ italian
 n
 y
 i
+canned tomato sauce
+????
+italian
+n
+y
+i
+beef bouillon
+protein
+meat
+n
+y
+i
+dried basil
+seasoning/spice
+none
+n
+y
+i
+fennel seeds
+seasoning/spice
+none
+n
+y
+i
 carrots
+????
+none
+n
+y
+i
+water
 ????
 none
 n
@@ -389,6 +419,18 @@ none
 n
 y
 i
+white vinegar
+seasoning/sauce
+none
+n
+y
+i
+vinegar
+seasoning/sauce
+none
+n
+y
+i
 worcestershire sauce
 seasoning/sauce
 none
@@ -667,7 +709,7 @@ y
 i
 mozzarella cheese
 dairy
-none
+italian
 n
 y
 i
@@ -956,6 +998,12 @@ n
 y
 i
 pork
+protein
+meat
+n
+y
+i
+pork chops
 protein
 meat
 n
@@ -1488,6 +1536,32 @@ i
 tofu
 protein
 none
+n
+y
+i
+fresh mozarella
+dairy
+italian
+n
+y
+i
+fresh basil
+seasoning/spice
+italian
+y
+east asian
+n
+y
+i
+provolone cheese
+dairy
+italian
+n
+y
+i
+provolone
+dairy
+italian
 n
 y
 i

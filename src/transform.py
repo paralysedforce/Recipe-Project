@@ -58,7 +58,6 @@ def pescatarianize(r):
     for ing in r.in_list:
         if is_protein(ing):
             if not is_fish(ing):
-                print "HULLABALLO", ing.name
                 r.in_list[i] = replace_ing(ing, 'cod')
                 r.pr_list = replace_ing_in_proc(r.pr_list, ing, 'cod')
         elif is_sauce(ing) and is_meat(ing):
@@ -76,7 +75,10 @@ def eastasianize(r):
     asian_spices = ['ginger','cilantro','sweet basil','red pepper']
     asian_sauces = ['soy sauce', 'sesame oil', 'fish sauce', 'rice wine']
     for ing in r.in_list:
-        if is_spice(ing):
+    	if 'olive oil' in ing.name:
+    		r.in_list[i] = replace_ing(ing, 'sesame oil')
+    		r.pr_list = replace_ing_in_proc(r.pr_list, ing, 'sesame oil')
+        elif is_spice(ing):
             if not is_east_asian(ing):
                 if j>=len(asian_spices):
                     del r.in_list[i]
@@ -85,7 +87,7 @@ def eastasianize(r):
                     r.in_list[i] = replace_ing(ing, asian_spices[j])
                     r.pr_list = replace_ing_in_proc(r.pr_list, ing, asian_spices[j])
                 j+=1    
-        if is_sauce(ing):
+        elif is_sauce(ing):
             if not is_east_asian(ing):
                 if k>=len(asian_sauces):
                     del r.in_list[i]
@@ -94,6 +96,11 @@ def eastasianize(r):
                     r.in_list[i] = replace_ing(ing, asian_sauces[k])
                     r.pr_list = replace_ing_in_proc(r.pr_list, ing, asian_spices[k])
                 k+=1
+        elif is_dairy(ing):
+        	if not is_east_asian(ing):
+                    r.in_list[i] = replace_ing(ing, 'mushrooms')
+                    r.pr_list = replace_ing_in_proc(r.pr_list, ing, 'mushrooms')
+
         i+=1
     return r
 
@@ -162,7 +169,7 @@ def is_cooking_method(p):
         document = cursor[0]        
         if document['category'] == 'cooking method':
             return True
-    except IndexError:
+    except:
         return False
     return False
 
@@ -193,7 +200,7 @@ def is_starch(i):
         document = cursor[0]
         if 'starch' in document['category']:
             return True
-    except IndexError:
+    except:
         return False
     return False
 
@@ -204,7 +211,7 @@ def is_east_asian(i):
         flags = document['flags']
         if 'east asian' in flags:
             return True
-    except IndexError:
+    except:
         return False
     
     return False
@@ -216,7 +223,7 @@ def is_salty(i):
         flags = document['flags']
         if 'salty' in flags:
             return True
-    except IndexError:
+    except:
         return False    
     return False
 
@@ -227,7 +234,7 @@ def is_italian(i):
         flags = document['flags']
         if 'italian' in flags:
             return True
-    except IndexError:
+    except:
         return False    
     return False
 
@@ -237,7 +244,7 @@ def is_fish(i):
         document = cursor[0]
         if 'fish' in document['category']:
             return True
-    except IndexError:
+    except:
         return False
     return False
 
@@ -258,7 +265,7 @@ def is_protein(i):
         document = cursor[0]        
         if 'protein' in document['category']:
             return True
-    except IndexError:
+    except:
         return False
     return False
 
@@ -268,7 +275,7 @@ def is_spice(i):
         document = cursor[0]
         if 'spice' in document['category']:
             return True
-    except IndexError:
+    except:
         return False
     return False
     
@@ -278,6 +285,16 @@ def is_sauce(i):
         document = cursor[0]
         if 'sauce' in document['category']:
             return True
-    except IndexError:
+    except:
+        return False    
+    return False
+
+def is_dairy(i):
+    cursor = db.ingredients.find({'name':i.name})
+    try:
+        document = cursor[0]
+        if 'dairy' in document['category']:
+            return True
+    except:
         return False    
     return False
