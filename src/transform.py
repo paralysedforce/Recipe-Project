@@ -61,8 +61,13 @@ def pescatarianize(r):
 	for ing in r.in_list:
 		if is_protein(ing):
 			if not is_fish(ing):
+				print "HULLABALLO", ing.name
 				r.in_list[i] = replace_ing(ing, 'cod')
-				i+=1
+				r.pr_list = replace_ing_in_proc(r.pr_list, ing, 'cod')
+		elif is_sauce(ing) and is_meat(ing):
+			r.in_list[i] = replace_ing(ing, 'vegetable broth')
+			r.pr_list = replace_ing_in_proc(r.pr_list, ing, 'vegetable broth')
+		i+=1
 	return r
 
 # want to replace spices
@@ -81,6 +86,7 @@ def eastasianize(r):
 					i-=1
 				else:
 					r.in_list[i] = replace_ing(ing, asian_spices[j])
+					r.pr_list = replace_ing_in_proc(r.pr_list, ing, asian_spice[j])
 				j+=1	
 		if is_sauce(ing):
 			if not is_east_asian(ing):
@@ -89,6 +95,7 @@ def eastasianize(r):
 					i-=1
 				else:
 					r.in_list[i] = replace_ing(ing, asian_sauces[k])
+					r.pr_list = replace_ing_in_proc(r.pr_list, ing, asian_spice[k])
 				k+=1
 		i+=1
 	return r
@@ -107,6 +114,7 @@ def italianize(r):
 					i-=1
 				else:
 					r.in_list[i] = replace_ing(ing, italian_spices[j])
+					r.pr_list = replace_ing_in_proc(r.pr_list, ing, italian_spices[j])
 					j+=1
 		if is_sauce(ing):
 			if k>=len(italian_sauces):
@@ -114,6 +122,7 @@ def italianize(r):
 				i-=1
 			else:
 				r.in_list[k] = replace_ing(ing, italian_spices[k])
+				r.pr_list = replace_ing_in_proc(r.pr_list, ing, italian_spices[k])
 				k+=1
 		i+=1
 	return r
@@ -132,6 +141,7 @@ def lowcarbize(r):
 		if is_starch(ing):
 			if j==0:
 				r.in_list[i] = replace_ing(ing, 'quinoa')
+				r.pr_list = replace_ing_in_proc(r.pr_list, ing, 'quinoa')
 				j+=1
 			else:
 				del r.in_list[i]
