@@ -250,7 +250,7 @@ def main(original_recipe):
             i += 1
         if i == 0:
             # add to DB
-            db.ingredients.insert({"name":new_ing.name})
+            db.ingredients.insert({"name":new_ing.name, "category":"????"})
         ingredients.append(new_ing)
 
     steps = []
