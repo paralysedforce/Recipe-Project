@@ -1281,6 +1281,30 @@ none
 n
 y
 i
+chicken stock
+seasoning/sauce
+meat
+y
+salty
+n
+y
+i
+beef stock
+seasoning/sauce
+meat
+y
+salty
+n
+y
+i
+beef broth
+seasoning/sauce
+meat
+y
+salty
+n
+y
+i
 chicken broth
 seasoning/sauce
 meat
