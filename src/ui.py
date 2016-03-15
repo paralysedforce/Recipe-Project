@@ -45,10 +45,8 @@ def main():
                 else:
                     recipe = recipe_classes.Recipe(URL, "recipe", command)
                     recipes = parser.main(recipe)
-                print recipes
                 original_recipe = recipes[0]
                 transformed_recipe = recipes[1]
-                print transformed_recipe
                 menu += 1
                 continue
             print "Invalid transformation"

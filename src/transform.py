@@ -32,7 +32,6 @@ def transform(r):
 
 def replace_ing_in_proc(proc_list, old, new):
     new_proc_list = []
-    print "\n\n\nREPLACING ING " + old.name + "WITH " + new
     for proc in proc_list:
         if old.name in proc.in_list:
             proc.in_list.remove(old.name)
@@ -137,7 +136,6 @@ def lowsodiumize(r):
         if is_salty(ing):
             r.in_list[i].amount /= 2
         i+=1
-    print r
     return r
 
 def lowcarbize(r):

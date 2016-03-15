@@ -28,12 +28,10 @@ def parse_ingredient(ingredients):
     processes the string and returns an ingredient object"""
     number = recognize_number(ingredients)
     unit = recognize_unit(ingredients)
-    print ingredients
     ingredients = ingredients.replace(unit, '')
     ingredients = ingredients.replace(str(number), '')
     ingredient_name = recognize_ingredient(ingredients)
     # descriptors = recognize_descriptors(ingredients)
-    print ingredient_name + ' ' + unit + ' ' + str(number)
     ingredient = recipe_classes.Ingredient(ingredient_name, number, unit)
     return ingredient
 
@@ -63,7 +61,6 @@ def recognize_unit(ingredients):
 def recognize_ingredient(ingredients):
     # preprocessing
     ingredient = _strip_punctuation((ingredients.replace('-', ' ')).lower())
-    print '\n\n\n\n\n\n', ingredient
     all_ing_cursor = db.ingredients.find()
     longest_match = ''
     for doc in all_ing_cursor:
@@ -97,8 +94,6 @@ def parse_step(step):
     step_ingredients = []
     step_cookware = []
 
-    print "\n\nPARSING STEP:\n", step, '\n'
-
     # for direction in DIRECTIONS:
     #     if direction in step:
     #         step_directions.append(direction)
@@ -131,12 +126,10 @@ def parse_step(step):
             if variation in step:
                 cookware_set.add(unicode(cookware))
     step_cookware = list(cookware_set)
-    print "Step cookware", step_cookware
 
     #GET TIME AND TEMP FROM STEP
     time = recognize_time(step)
     temp = recognize_temp(step)
-    print step_procedures[0] + ' ' + time + ' ' + temp
     if not step_procedures:
         step_procedures = ['placeholder proc']
     proc = recipe_classes.Procedure(step_procedures[0], step_ingredients, step_cookware, time, temp)
