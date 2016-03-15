@@ -31,7 +31,7 @@ def reconstruct(r):
 
         if transform.is_cooking_method(proc):
             if proc.cookware:
-                line += 'with ' 
+                line += 'with '
                 line += ' and cookware: '.join(cookware for cookware in proc.cookware)
             line += ' ' + proc.name
             if proc.in_list:

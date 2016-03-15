@@ -10,8 +10,6 @@ import sys
 client = MongoClient()
 
 db = client["k_base"]
-ingredients = db["ingredients"]
-procedures = db["procedures"]
 
 def transform(r):
     i = r.transformation
@@ -86,7 +84,7 @@ def eastasianize(r):
                     i-=1
                 else:
                     r.in_list[i] = replace_ing(ing, asian_spices[j])
-                    r.pr_list = replace_ing_in_proc(r.pr_list, ing, asian_spice[j])
+                    r.pr_list = replace_ing_in_proc(r.pr_list, ing, asian_spices[j])
                 j+=1    
         if is_sauce(ing):
             if not is_east_asian(ing):
@@ -95,7 +93,7 @@ def eastasianize(r):
                     i-=1
                 else:
                     r.in_list[i] = replace_ing(ing, asian_sauces[k])
-                    r.pr_list = replace_ing_in_proc(r.pr_list, ing, asian_spice[k])
+                    r.pr_list = replace_ing_in_proc(r.pr_list, ing, asian_spices[k])
                 k+=1
         i+=1
     return r
@@ -148,14 +146,6 @@ def lowcarbize(r):
             else:
                 del r.in_list[i]
                 i-=1
-        i+=1
-    return r
-
-def easyize(r):
-    i = 0
-    for proc in r.pr_list:
-        if is_cooking_method(proc):
-            r.pr_list[i] = replace_proc(proc, 'bake')
         i+=1
     return r
 
