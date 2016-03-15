@@ -48,7 +48,13 @@ COOKWARE = {
         "knife": ["knife", "knifes"],
         "spoon": ["spoon", "spoons"],
         "oven": ["oven"],
-        "baster": ["baster", "basters", "baste"]}
+        "stove": ["stovetop", "stove", "stove top"],
+        "grill": ["grill"],
+        "oven broiler": ["oven broiler"],
+        "baster": ["baster", "basters", "baste"],
+        "skillet": ["skillet", "skillets"],
+        "dish": ["dish", "dishes"],
+        "cup": ["cup", "cups"]}
 
-TIME = ['minutes', 'minute', 'seconds', 'hours', 'milliseconds']
 
+TIME = ['minutes', 'minute', 'seconds', 'hours', 'hour', 'milliseconds']

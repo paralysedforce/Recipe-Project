@@ -1,6 +1,6 @@
 '''Version 0.1'''
 import scrape
-import parser
+import parser2
 from data import *
 
 def autograder(url):
