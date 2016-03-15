@@ -361,46 +361,13 @@ def main(original_recipe):
     except RuntimeError:
         return original_recipe, Recipe()
 
-    if transformed_recipe == original_recipe:
-        print "There are no changes to be made"
-    else:
-        reconstruction.reconstruct(transformed_recipe)
+    #if transformed_recipe == original_recipe:
+    #    print "There are no changes to be made"
+    #else:
+    reconstruction.reconstruct(transformed_recipe)
     return original_recipe, transformed_recipe
 
 
-
-def fuck(step):
-    step_sent = nltk.sent_tokenize(step)
-    for sent in step_sent:
-        print "Step:", step, ". Contains: ", contains_procedure(step)
-        if contains_procedure(sent) == 1:
-            new_proc = parse_step(sent)
-        elif contains_procedure(sent) > 1:
-            actions = double_action(sent)
-            if actions:
-                for a in actions:
-                    new_proc = parse_step(a)
-                if contains_procedure(sent) == 2:
-                    break
-            clause = sent.split(';')
-            for c in clause:
-                if contains_procedure(c) == 1:
-                    new_proc = parse_step(c)
-                elif contains_procedure(c) > 1:
-                    more_clause = c.split(',')
-                    for more_c in more_clause:
-                        if contains_procedure(more_c) == 1:
-                            new_proc = parse_step(more_c)
-                        elif contains_procedure(more_c) > 1:
-                            actions = double_action(more_c)
-                            if actions:
-                                for a in actions:
-                                    new_proc = parse_step(a)
-                                if contains_procedure(more_c) == 2:
-                                    break
-                            else:
-                                new_proc = parse_step(more_c)
-    return new_proc
 
 # if __name__ == "__main__":
 #     main()
