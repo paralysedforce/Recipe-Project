@@ -15,7 +15,6 @@ import transform
 
 client = MongoClient()
 db = client["k_base"]
-execfile('recipe_db.py')
 
 # Quantity = namedtuple("Quantity", ["value", "unit"])
 # Ingredient = namedtuple("Ingredient", ['name', 'quantity', 'descriptors'])
@@ -248,7 +247,7 @@ def main(original_recipe):
             i += 1
         if i == 0:
             # add to DB
-            db.ingredients.insert({"name":new_ing.name, "category":"????"})
+            db.ingredients.insert({"name":new_ing.name, "category":"????", "flag":"none"})
         ingredients.append(new_ing)
 
     steps = []
