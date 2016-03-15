@@ -256,6 +256,11 @@ def main(original_recipe):
         #SPLIT STEP CONTENTS BEFORE PARSING
         if not step:
             continue # HANDLE EMPTY
+    # for new_parser
+        # parsed_steps = parse_step(step)
+        # for p in parsed_steps:
+        #     steps.append(p)
+    #for new_parser
         step_sent = nltk.sent_tokenize(step)
         for sent in step_sent:
             if contains_procedure(sent) == 1:
