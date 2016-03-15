@@ -151,14 +151,6 @@ def lowcarbize(r):
         i+=1
     return r
 
-def easyize(r):
-    i = 0
-    for proc in r.pr_list:
-        if is_cooking_method(proc):
-            r.pr_list[i] = replace_proc(proc, 'bake')
-        i+=1
-    return r
-
 #############
 ## helpers ##
 #############
