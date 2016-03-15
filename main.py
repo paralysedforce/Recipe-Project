@@ -1,4 +1,4 @@
-import src.ui
+import Team7.ui
 
 if __name__ == "__main__":
-	ui.main()
+	Team7.ui.main()
