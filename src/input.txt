@@ -1211,7 +1211,7 @@ add
 ????
 y
 p
-wisk
+whisk
 ????
 y
 p
@@ -1339,4 +1339,26 @@ bean sprouts
 ????
 east asian
 n
+y
+p
+melt
+cooking method
+y
+i
+swiss chard
+????
+none
 n
+y
+i
+jalapenos
+????
+none
+n
+y
+p
+stir in
+????
+n
+n
+

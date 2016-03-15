@@ -15,7 +15,7 @@ procedures = db["procedures"]
 
 def transform(r):
 	i = r.transformation
-	if i.lower() == 'pescetarian':
+	if i.lower() == 'pescatarian':
 		ret = pescatarianize(r)
 	elif i.lower() == 'vegetarian':
 		ret = vegatarianize(r)
@@ -28,7 +28,7 @@ def transform(r):
 	elif i.lower() == 'low sodium':
 		ret = lowsodiumize(r)
 	elif i.lower() == 'low carb':
-		ret = lowcalorieize(r)
+		ret = lowcarbize(r)
 	else:
 		raise RuntimeError('Error! Wrong transformation name')
 	return ret
@@ -60,7 +60,7 @@ def pescatarianize(r):
 	i = 0
 	for ing in r.in_list:
 		if is_protein(ing):
-			if not is_fish():
+			if not is_fish(ing):
 				r.in_list[i] = replace_ing(ing, 'cod')
 				i+=1
 	return r
@@ -131,7 +131,7 @@ def lowcarbize(r):
 	for ing in r.in_list:
 		if is_starch(ing):
 			if j==0:
-				r.in_list[i] = replace_ing[ing, 'quinoa']
+				r.in_list[i] = replace_ing(ing, 'quinoa')
 				j+=1
 			else:
 				del r.in_list[i]
@@ -146,7 +146,6 @@ def easyize(r):
 			r.pr_list[i] = replace_proc(proc, 'bake')
 		i+=1
 	return r
-
 
 #############
 ## helpers ##
