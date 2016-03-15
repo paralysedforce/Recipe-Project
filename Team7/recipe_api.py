@@ -1,6 +1,6 @@
 '''Version 0.1'''
 import scrape
-import parser
+import parser2
 from data import *
 
 def autograder(url):
@@ -12,12 +12,13 @@ def autograder(url):
 #   name, quantity, measurement, descriptor, preparation, pre-preparation
     fin_ingredients = []
     for ingredient in ingredient_strings:
-        name = parser.recognize_ingredient(ingredient)
+        name = unicode(parser.recognize_ingredient(ingredient))
         number = parser.recognize_number(ingredient)
         unit = parser.recognize_unit(ingredient)
-        descriptors = parser.recognize_descriptors(ingredient)
+        descriptors = [unicode(i) for i in
+                parser.recognize_descriptors(ingredient)]
         fin_ingredients.append({"name": name, "quantity": number, "measurement":
-            unit, "descriptor": descriptors})
+            [unicode(unit)], "descriptor": descriptors})
 
     primary_method = None
     methods = set()
@@ -25,17 +26,17 @@ def autograder(url):
         for variation in COOKING_METHODS[method]:
             for step in step_strings:
                 if variation in step:
-                    methods.add(method)
-                    primary_method = method
+                    methods.add(unicode(method))
+                    primary_method = unicode(method)
 
     cookware_set = set()
     for cookware in COOKWARE:
         for variation in COOKWARE[cookware]:
             for step in step_strings:
                 if variation in step:
-                    cookware_set.add(cookware)
+                    cookware_set.add(unicode(cookware))
 
-    return {"ingredients": fin_ingredients, "cooking methods": list(methods),
+    return {"ingredients": list(fin_ingredients), "cooking methods": list(methods),
             "primary cooking method": primary_method, "cooking tools":
             list(cookware_set)}
 

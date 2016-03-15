@@ -7,11 +7,11 @@ from bs4 import BeautifulSoup
 def scrape(url):
     r = requests.get(url)
     soup = BeautifulSoup(r.text, "html.parser")
-    ingredient_strings = [i.text for i in soup("span", {
-        "class": "recipe-ingred_txt", "itemprop": "ingredients"
-        }) if i.text]
-    step_strings = [i.text for i in soup('span', class_ =
-        "recipe-directions__list--item") if i.text]
+    ingredient_strings = [i.text for i in soup.findAll("span", {
+        "class": "recipe-ingred_txt",
+        "itemprop": "ingredients"})]
+    step_strings = [i.text for i in soup.findAll('span', class_ =
+        "recipe-directions__list--item")]
 
     return [ingredient_strings, step_strings]
 
