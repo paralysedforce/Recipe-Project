@@ -5,9 +5,6 @@ from pymongo import MongoClient
 client = MongoClient()
 
 db = client["k_base"]
-ingredients = db["ingredients"]
-procedures = db["procedures"]
-cookware = db["cookware"]
 
 kb_item = {}
 main = True

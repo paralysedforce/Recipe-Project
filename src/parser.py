@@ -16,8 +16,6 @@ import transform
 client = MongoClient()
 
 db = client["k_base"]
-ingredients = db["ingredients"]
-procedures = db["procedures"]
 
 # Quantity = namedtuple("Quantity", ["value", "unit"])
 # Ingredient = namedtuple("Ingredient", ['name', 'quantity', 'descriptors'])
