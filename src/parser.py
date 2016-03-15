@@ -361,7 +361,10 @@ def main(original_recipe):
     except RuntimeError:
         return original_recipe, Recipe()
 
-    reconstruction.reconstruct(transformed_recipe)
+    if transformed_recipe == original_recipe:
+        print "There are no changes to be made"
+    else:
+        reconstruction.reconstruct(transformed_recipe)
     return original_recipe, transformed_recipe
 
 
