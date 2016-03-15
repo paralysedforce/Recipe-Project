@@ -11,13 +11,13 @@ from collections import Counter
 # init is an optional flag to indicate you're starting
 # over; old autograder results are written over and column
 # headers are printed to the file.
-team = "7"
+team = ""
 init = False
 for arg in sys.argv:
     if arg == "init":
         init = True
-#    else:
-#        team = arg
+    else:
+        team = arg
 
 api = importlib.import_module("Team%s.recipe_api" % team)
 
