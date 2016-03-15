@@ -1,0 +1,18 @@
+{
+    "styles":
+    {
+        "indian":
+            {
+                "spices": ["curry", "tamarind powder", "chilli"]
+                "carb": "rice"
+                "bread": "naan"
+                "meats": "chicken", "goat", "lamb"
+                "vegetarian": "REMOVE"
+            },
+        "mexican":
+            {
+                "spices": ["chilli", 'habenero', 
+            }
+
+    }
+}

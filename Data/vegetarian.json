@@ -1,0 +1,11 @@
+{
+    "meats": {
+        "pork": "tofu",
+        'beef': "eggplant",
+        'crab': "mushrooms",
+        'fish': "tofu",
+        'chicken': "tofu", 
+        'rabbit': "seitan"
+        'lamb': "eggplant"
+    }
+}
