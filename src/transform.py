@@ -12,7 +12,6 @@ client = MongoClient()
 db = client["k_base"]
 ingredients = db["ingredients"]
 procedures = db["procedures"]
-transformations = db["transformations"]
 
 def transform(r):
 	i = r.transformation
@@ -34,15 +33,26 @@ def transform(r):
 		raise RuntimeError('Error! Wrong transformation name')
 	return ret
 
+def replace_ing_in_proc(proc_list, old, new):
+	new_proc_list = []
+	print "\n\n\nREPLACING ING " + old.name + "WITH " + new
+	for proc in proc_list:
+		if old.name in proc.in_list:
+			proc.in_list.remove(old.name)
+			proc.in_list.append(new)
+		new_proc_list.append(proc)
+	return new_proc_list
+
 def vegatarianize(r):
 	i = 0
 	for ing in r.in_list:
-		print ing
 		if is_meat(ing):
 			if is_protein(ing):
 				r.in_list[i] = replace_ing(ing, 'tofu')
+				r.pr_list = replace_ing_in_proc(r.pr_list, ing, 'tofu')
 			elif is_sauce(ing):
-				r.in_list[i] = replace_ing(ing, 'vegetable broth')
+				r.in_list[i] = replace_ing(ing, 'vegetable broth')				
+				r.pr_list = replace_ing_in_proc(r.pr_list, ing, 'vegetable broth')
 		i+=1
 	return r
 

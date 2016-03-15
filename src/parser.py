@@ -18,7 +18,6 @@ client = MongoClient()
 db = client["k_base"]
 ingredients = db["ingredients"]
 procedures = db["procedures"]
-transformations = db["transformations"]
 
 # Quantity = namedtuple("Quantity", ["value", "unit"])
 # Ingredient = namedtuple("Ingredient", ['name', 'quantity', 'descriptors'])
@@ -32,9 +31,12 @@ def parse_ingredient(ingredients):
     processes the string and returns an ingredient object"""
     number = recognize_number(ingredients)
     unit = recognize_unit(ingredients)
+    print ingredients
+    ingredients = ingredients.replace(unit, '')
+    ingredients = ingredients.replace(str(number), '')
     ingredient_name = recognize_ingredient(ingredients)
     # descriptors = recognize_descriptors(ingredients)
-
+    print ingredient_name + ' ' + unit + ' ' + str(number)
     ingredient = recipe_classes.Ingredient(ingredient_name, number, unit)
     return ingredient
 
@@ -49,6 +51,8 @@ def recognize_number(ingredients):
         return float(match[0]) / float(match[1][1:])
     elif match[1][0] == ' ' and match[2][0] == '/':
         return int(match[0]) + (float(match[1][1:]) / float(match[2][1:]))
+    else:
+        match = ''
     return match
 
 def recognize_unit(ingredients):
@@ -61,16 +65,17 @@ def recognize_unit(ingredients):
 
 def recognize_ingredient(ingredients):
     # preprocessing
-    print ingredients
     ingredient = _strip_punctuation((ingredients.replace('-', ' ')).lower())
-    print ingredient
-
-    cursor = db.ingredients.find({"name":ingredient})
-    try:
-        document = cursor[0]
-    except:
-        db.ingredients.insert({"name":ingredient, "category":'????', "flags":'none'})
-    finally:
+    print '\n\n\n\n\n\n', ingredient
+    all_ing_cursor = db.ingredients.find()
+    longest_match = ''
+    for doc in all_ing_cursor:
+        if doc['name'] in ingredient:
+            if len(doc['name']) > len(longest_match):
+                longest_match = doc['name']
+    if longest_match:
+        return longest_match
+    else:
         return ingredient
 
 def recognize_descriptors(ingredients, data = None):
@@ -95,6 +100,8 @@ def parse_step(step):
     step_ingredients = []
     step_cookware = []
 
+    print "\n\nPARSING STEP:\n", step, '\n'
+
     # for direction in DIRECTIONS:
     #     if direction in step:
     #         step_directions.append(direction)
@@ -108,41 +115,87 @@ def parse_step(step):
 
     ing_cursor = db.ingredients.find()
     proc_cursor = db.procedures.find()
-    cw_cursor = db.cookware.find()
-    step = step.lower()
+    step = _strip_punctuation(step.lower())
+    longest_match = ''
     for document in ing_cursor:
         if isinstance(document['name'], basestring):
             if document['name'] in step:
                 step_ingredients.append(document['name'])
     for document in proc_cursor:
         if isinstance(document['name'], basestring):
-            print '\n\n\nPASSED TEST: ', step, '\n', document['name'], '\n'
             if document['name'] in step:
-                print 'FOUND IN STEP', document['name']
-                step_procedures.append(document['name'])
-    for document in cw_cursor:
-        if isinstance(document['name'], basestring):
-            if document['name'] in step:
-                step_cookware.append(document['name'])
+                if len(document['name']) > len(longest_match):
+                    longest_match = document['name']
+                    step_procedures.append(document['name'])
+    for c in COOKWARE:
+        if c in step:
+            step_cookware.append(c)
 
 
     #GET TIME AND TEMP FROM STEP
-    time = '100 minutes'
-    temp = '100F'
+    time = recognize_time(step)
+    temp = recognize_temp(step)
+    print step_procedures[0] + ' ' + time + ' ' + temp
     if not step_procedures:
         step_procedures = ['placeholder proc']
     proc = recipe_classes.Procedure(step_procedures[0], step_ingredients, step_cookware, time, temp)
     return proc
 
+def double_action(step):
+    i = 0
+    proc_step = _strip_punctuation(step.lower()).split()
+    ing = []
+    proc1 = ''
+    proc2 = ''
+    flag = ''
+    ret = []
+    for word in proc_step:
+        if word is 'and' or word is 'then':
+            if word is 'and':
+                flag = 'a'
+            elif word is 'then':
+                flag = 't'
+            proc1 = proc_step[i-1]
+            proc2 = proc_step[i+1]
+            c1 = db.procedures.find({"name":proc1})
+            c2 = db.procedures.find({"name":proc2})
+            try:
+                c1[0]
+                c2[0]
+                for ing in proc_step:
+                    cursor = db.ingredients.find({"name":ing})
+                    try:
+                        doc = cursor[0]
+                        ings.append(ing)
+                    except:
+                        pass
+            except:
+                pass
+        i += 1
+    if flag is 'a':
+        split_step = step.split('and')
+        for s in split_step:
+            for ing in ings:
+                s += ' '.join(ing)
+            ret.append(s)
+    elif flag is 't':
+        split_step = step.split('then')
+        for s in split_step:
+            for ing in ings:
+                s += ' '.join(ing)
+            ret.append(s)
+    return ret
+
 def recognize_time(step):
     processed_step = _strip_punctuation(step.lower()).split()
+    time = ''
     for i in xrange(len(processed_step)):
         word = processed_step[i]
         if word in TIME and i > 0:
-            prev_word = processed_step[i-1] 
-            if all(map(lambda c: c in '1234567890' or c in punctuation,
-                prev_word)):
-                return prev_word + ' ' +  word
+            prev_word = processed_step[i-1]
+            if all(map(lambda c: c in '1234567890' or c in punctuation, prev_word)):
+                time += prev_word + ' ' +  word + ' '
+    return time
 
 
 def recognize_temp(step):
@@ -150,10 +203,31 @@ def recognize_temp(step):
     if 'degrees' in lower_step:
         ind = lower_step.split().index('degrees')
         return " ".join(i for i in step.split()[ind-1: ind+2])
+    elif 'low heat' in lower_step:
+        return 'low heat'
+    elif 'medium heat' in lower_step:
+        return 'medium heat'
+    elif 'high heat' in lower_step:
+        return 'high heat'
+    return ''
 
 ## Helper
 def _strip_punctuation(string):
     return "".join(char for char in string if char not in punctuation)
+
+def contains_procedure(step):
+    count = 0
+    step = _strip_punctuation(step.lower()).split()
+    for w in step:
+        cursor = db.procedures.find({"name":w})
+        try:
+            doc = cursor[0]
+            count += 1
+        except:
+            pass
+    return count
+
+
 
 def main(original_recipe):
     # urls = ['http://allrecipes.com/recipe/easy-meatloaf/',
@@ -165,7 +239,7 @@ def main(original_recipe):
     # parse ingredient info, create objects
     ingredients = []
     for ingredient in scraped_ing:
-        new_ing = parse_ingredient(scraped_ing)
+        new_ing = parse_ingredient(ingredient)
         cursor = db.ingredients.find({"name":new_ing.name})
         i = 0
         for document in cursor:
@@ -178,18 +252,100 @@ def main(original_recipe):
     steps = []
     for step in scraped_steps:
         #SPLIT STEP CONTENTS BEFORE PARSING
-        step_info = step.contents
-        if not step_info:
+        if not step:
             continue # HANDLE EMPTY
-        step_sent = nltk.sent_tokenize(step_info[0])
+        step_sent = nltk.sent_tokenize(step)
         for sent in step_sent:
-            split_step = sent.split(',')
-            for clause in split_step:
-                clause_step = clause.split(';')
-                for s in clause_step:
-                    print s
-                    new_proc = parse_step(s)
-                    steps.append(new_proc)
+            if contains_procedure(sent) == 1:
+                new_proc = parse_step(sent)
+                steps.append(new_proc)
+            elif contains_procedure(sent) > 1:
+                actions = double_action(sent)
+                if actions:
+                    for a in actions:
+                        new_proc = parse_step(a)
+                        steps.append(new_proc)
+                    if contains_procedure(sent) == 2:
+                        break
+                clause = sent.split(';')
+                for c in clause:
+                    if contains_procedure(c) == 1:
+                        new_proc = parse_step(c)
+                        steps.append(new_proc)
+                    elif contains_procedure(c) > 1:
+                        more_clause = c.split(',')
+                        for more_c in more_clause:
+                            if contains_procedure(more_c) == 1:
+                                new_proc = parse_step(more_c)
+                                steps.append(new_proc)
+                            elif contains_procedure(more_c) > 1:
+                                actions = double_action(more_c)
+                                if actions:
+                                    for a in actions:
+                                        new_proc = parse_step(a)
+                                        steps.append(new_proc)
+                                    if contains_procedure(more_c) == 2:
+                                        break
+                                else:
+                                    new_proc = parse_step(more_c)
+                                    steps.append(new_proc)
+
+
+
+
+                                # if 'and' in more_c:
+                                #     more_c = more_c.split('and')
+                                #     ings = []
+                                #     for m_c in more_c:
+                                #         for w in m_c:
+                                #             cursor = db.ingredients.find({"name":w})
+                                #             try:
+                                #                 document = cursor[0]
+                                #                 ings.append(document['name'])
+                                #             except:
+                                #                 pass
+                                #     for m_c in more_c:
+                                #         for i in ings:
+                                #             if i not in m_c:
+                                #                 m_c += ' '.join(i)
+                                #         new_proc = parse_step(m_c)
+                                #         steps.append(new_proc)
+                                # if 'then' in more_c:
+                                #     more_c = more_c.split('then')
+                                #     ings = []
+                                #     for m_c in more_c:
+                                #         for w in m_c:
+                                #             cursor = db.ingredients.find({"name":w})
+                                #             try:
+                                #                 document = cursor[0]
+                                #                 ings.append(document['name'])
+                                #             except:
+                                #                 pass
+                                #     for m_c in more_c:
+                                #         for i in ings:
+                                #             if i not in m_c:
+                                #                 m_c += ' '.join(i)
+                                #         new_proc = parse_step(m_c)
+                                #         steps.append(new_proc)
+            
+
+
+
+
+
+            # split_step = sent.split(';')
+
+            # for clause in split_step:
+            #     if contains_procedure(clause) == 1:
+            #         new_proc = parse_step(clause)
+            #     elif contains_procedure(clause) >= 1:
+                    
+            # for clause in split_step:
+            #     clause_step = clause.split(';')
+            #     for s in clause_step:
+            #         # print s
+            #         new_proc = parse_step(s)
+            #         steps.append(new_proc)
 
     original_recipe.in_list = ingredients
     original_recipe.pr_list = steps

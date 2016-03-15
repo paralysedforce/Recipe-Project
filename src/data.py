@@ -49,4 +49,4 @@ COOKWARE = {
         "oven": ["oven"],
         "baster": ["baster", "basters", "baste"]}
 
-TIME = ['minutes', 'minute', 'seconds', 'hours', 'milliseconds']
+TIME = ['minutes', 'minute', 'seconds', 'hours', 'hour', 'milliseconds']
