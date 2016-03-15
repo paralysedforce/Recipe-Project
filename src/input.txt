@@ -1450,6 +1450,7 @@ lime slices
 none
 n
 y
+i
 orange slice
 ????
 none
@@ -1483,7 +1484,6 @@ p
 season
 ????
 y
-p
 i
 tofu
 protein
@@ -1494,6 +1494,5 @@ i
 sea salt
 seasoning/spice
 salty
-n
 n
 n
