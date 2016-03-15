@@ -1489,6 +1489,11 @@ tofu
 protein
 none
 n
+y
+i
+sea salt
+seasoning/spice
+salty
 n
 n
-
+n
