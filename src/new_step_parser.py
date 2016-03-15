@@ -205,21 +205,19 @@ def parse_step(step):
 			continue
 
 		if i in ingredient_indices:
-			if i < len(tokens)-1:
-				if i+1 in ingredient_indices:
-					if i < len(tokens)-2
-						if i+2 in ingredient_indices:
-							# do something with three worded ingredient
-							i += 3
-							continue
-						else:
-							# do something with two worded ingredient
-							i += 2
-							continue
-				else:
-					# do something with one worded ingredient
-					i += 1
+			if i+1 in ingredient_indices:
+				if i+2 in ingredient_indices:
+					clause_ingredients.append(tokens[i]+' '+tokens[i+1]+' '+tokens[i+2])
+					i += 3
 					continue
+				else:
+					clause_ingredients.append(tokens[i]+' '+tokens[i+1])
+					i += 2
+					continue
+			else:
+				clause_ingredients.append(tokens[i])
+				i += 1
+				continue
 
 		if t is 'them':
 			clause_ingredients = prev_ings
