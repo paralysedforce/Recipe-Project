@@ -133,6 +133,7 @@ def lowsodiumize(r):
 		if is_salty(ing):
 			r.in_list[i] = half(ing)
 		i+=1
+	return r
 
 def lowcarbize(r):
 	i = 0
@@ -291,6 +292,8 @@ def is_sauce(i):
 		return False	
 	return False
 	
+def half(ing):
+	return ing.amount/2
 
 
 

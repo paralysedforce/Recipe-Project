@@ -1284,6 +1284,8 @@ i
 chicken broth
 seasoning/sauce
 meat
+y
+salty
 n
 y
 i

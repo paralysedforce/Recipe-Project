@@ -11,7 +11,7 @@ import transform
 
 def reconstruct(r):
     fs = ''
-
+    print r
     fs += '%s\ttransformed to fit the following criteria: %s' % (r.name, r.transformation)
     fs += "\n\nIngredients:\n"
     for ing in r.in_list:
