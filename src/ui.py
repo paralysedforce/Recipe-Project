@@ -40,6 +40,7 @@ def main():
                 recipe = recipe_classes.Recipe(URL, "recipe", command)
                 transformed_recipe = parser.main(recipe)
                 print transformed_recipe
+                continue
             print "Invalid transformation"
 
 
