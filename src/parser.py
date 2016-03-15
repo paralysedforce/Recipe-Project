@@ -127,10 +127,14 @@ def parse_step(step):
                 if len(document['name']) > len(longest_match):
                     longest_match = document['name']
                     step_procedures.append(document['name'])
-    for c in COOKWARE:
-        if c in step:
-            step_cookware.append(c)
 
+    cookware_set = set()
+    for cookware in COOKWARE:
+        for variation in COOKWARE[cookware]:
+            if variation in step:
+                cookware_set.add(unicode(cookware))
+    step_cookware = list(cookware_set)
+    print "Step cookware", step_cookware
 
     #GET TIME AND TEMP FROM STEP
     time = recognize_time(step)
@@ -194,7 +198,7 @@ def recognize_time(step):
         if word in TIME and i > 0:
             prev_word = processed_step[i-1]
             if all(map(lambda c: c in '1234567890' or c in punctuation, prev_word)):
-                time += prev_word + ' ' +  word + ' '
+                time += prev_word + ' ' +  word 
     return time
 
 
@@ -291,7 +295,7 @@ def main(original_recipe):
                                     steps.append(new_proc)
 
 
-
+ 
 
                                 # if 'and' in more_c:
                                 #     more_c = more_c.split('and')
@@ -362,6 +366,38 @@ def main(original_recipe):
 
 
 
+def fuck(step):
+    step_sent = nltk.sent_tokenize(step)
+    for sent in step_sent:
+        print "Step:", step, ". Contains: ", contains_procedure(step)
+        if contains_procedure(sent) == 1:
+            new_proc = parse_step(sent)
+        elif contains_procedure(sent) > 1:
+            actions = double_action(sent)
+            if actions:
+                for a in actions:
+                    new_proc = parse_step(a)
+                if contains_procedure(sent) == 2:
+                    break
+            clause = sent.split(';')
+            for c in clause:
+                if contains_procedure(c) == 1:
+                    new_proc = parse_step(c)
+                elif contains_procedure(c) > 1:
+                    more_clause = c.split(',')
+                    for more_c in more_clause:
+                        if contains_procedure(more_c) == 1:
+                            new_proc = parse_step(more_c)
+                        elif contains_procedure(more_c) > 1:
+                            actions = double_action(more_c)
+                            if actions:
+                                for a in actions:
+                                    new_proc = parse_step(a)
+                                if contains_procedure(more_c) == 2:
+                                    break
+                            else:
+                                new_proc = parse_step(more_c)
+    return new_proc
 
 # if __name__ == "__main__":
 #     main()

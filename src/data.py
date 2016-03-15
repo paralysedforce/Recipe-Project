@@ -16,7 +16,8 @@ UNITS = {
         'centimeter': ['cm', 'centimeter', 'centimeters', 'centimetres',
         'centimetre'],
         'dash': ['dash', 'dashes'],
-        'pinch': ['pinch', 'pinches']
+        'pinch': ['pinch', 'pinches'],
+        'to taste': ['to taste']
         } 
 
 MEATS = ['bear', 'beef', 'beef heart', 'beef liver', 'beef tongue', 'buffalo', 'bison', 'calf liver', 'caribou', 'goat', 'ham', 'horse', 'kangaroo', 'lamb', 'marrow soup', 'moose', 'mutton', 'opossum', 'organ meats', 'pork', 'pork', 'bacon', 'rabbit', 'snake', 'squirrel', 'sweetbreads', 'tripe', 'turtle', 'veal', 'venison', 'chicken', 'chicken liver', 'cornish game hen', 'duck', 'duck liver', 'emu', 'gizzards', 'goose', 'goose liver', 'grouse', 'guinea hen', 'liver', 'organs', 'ostrich', 'partridge', 'pheasant', 'quail', 'squab', 'turkey', 'tuna fish']
@@ -47,6 +48,10 @@ COOKWARE = {
         "knife": ["knife", "knifes"],
         "spoon": ["spoon", "spoons"],
         "oven": ["oven"],
-        "baster": ["baster", "basters", "baste"]}
+        "baster": ["baster", "basters", "baste"],
+        "skillet": ["skillet", "skillets"],
+        "dish": ["dish", "dishes"],
+        "cup": ["cup", "cups"]}
+
 
 TIME = ['minutes', 'minute', 'seconds', 'hours', 'hour', 'milliseconds']
