@@ -58,7 +58,6 @@ def pescatarianize(r):
     for ing in r.in_list:
         if is_protein(ing):
             if not is_fish(ing):
-                print "HULLABALLO", ing.name
                 r.in_list[i] = replace_ing(ing, 'cod')
                 r.pr_list = replace_ing_in_proc(r.pr_list, ing, 'cod')
         elif is_sauce(ing) and is_meat(ing):
@@ -162,7 +161,7 @@ def is_cooking_method(p):
         document = cursor[0]        
         if document['category'] == 'cooking method':
             return True
-    except IndexError:
+    except:
         return False
     return False
 
@@ -193,7 +192,7 @@ def is_starch(i):
         document = cursor[0]
         if 'starch' in document['category']:
             return True
-    except IndexError:
+    except:
         return False
     return False
 
@@ -204,7 +203,7 @@ def is_east_asian(i):
         flags = document['flags']
         if 'east asian' in flags:
             return True
-    except IndexError:
+    except:
         return False
     
     return False
@@ -216,7 +215,7 @@ def is_salty(i):
         flags = document['flags']
         if 'salty' in flags:
             return True
-    except IndexError:
+    except:
         return False    
     return False
 
@@ -227,7 +226,7 @@ def is_italian(i):
         flags = document['flags']
         if 'italian' in flags:
             return True
-    except IndexError:
+    except:
         return False    
     return False
 
@@ -237,7 +236,7 @@ def is_fish(i):
         document = cursor[0]
         if 'fish' in document['category']:
             return True
-    except IndexError:
+    except:
         return False
     return False
 
@@ -258,7 +257,7 @@ def is_protein(i):
         document = cursor[0]        
         if 'protein' in document['category']:
             return True
-    except IndexError:
+    except:
         return False
     return False
 
@@ -268,7 +267,7 @@ def is_spice(i):
         document = cursor[0]
         if 'spice' in document['category']:
             return True
-    except IndexError:
+    except:
         return False
     return False
     
@@ -278,6 +277,6 @@ def is_sauce(i):
         document = cursor[0]
         if 'sauce' in document['category']:
             return True
-    except IndexError:
+    except:
         return False    
     return False
