@@ -14,8 +14,8 @@ import reconstruction
 import transform
 
 client = MongoClient()
-
 db = client["k_base"]
+execfile('recipe_db.py')
 
 # Quantity = namedtuple("Quantity", ["value", "unit"])
 # Ingredient = namedtuple("Ingredient", ['name', 'quantity', 'descriptors'])
