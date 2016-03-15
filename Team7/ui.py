@@ -39,14 +39,14 @@ def main():
                 continue
             if command in transformations:
                 if again:
-                    print transformed_recipe
-                    transformed_recipe[1].transformation = command
-                    transformed_recipe = parser.main(transformed_recipe[1])
+                    transformed_recipe.url = ''
+                    transformed_recipe.transformation = command
+                    recipes = parser.main(transformed_recipe)
                 else:
                     recipe = recipe_classes.Recipe(URL, "recipe", command)
-                    transformed_recipe = parser.main(recipe)
-
-                print transformed_recipe
+                    recipes = parser.main(recipe)
+                original_recipe = recipes[0]
+                transformed_recipe = recipes[1]
                 menu += 1
                 continue
             print "Invalid transformation"

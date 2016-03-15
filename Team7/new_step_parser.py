@@ -1,5 +1,4 @@
 def parse_step(step):
-    print "\n\n\nSTEP: ", step
     tokens = nltk.word_tokenize(step)
 
     ingredient_indices = []
@@ -47,7 +46,6 @@ def parse_step(step):
 
         t = tokens[i]
         tokens[i] = t.lower()
-        print prev2+' '+prev+' '+t
 
         if prev2+' '+prev+' '+t in all_ing:
             if i-2 in ingredients
@@ -77,7 +75,7 @@ def parse_step(step):
             used_indices.append(i)
         elif t in all_actions:
             if i in used_indices:
-                print "INGREDIENT AND PROCEDURE!!!!"
+                poo = 1
             else:
                 actions.append(t)
                 action_indices.append(i)
@@ -117,16 +115,6 @@ def parse_step(step):
             separator_indices.append(i)
             used_indices.append(i)
 
-    print ingredients
-    print actions
-    print cookware
-    print separators
-    print temperatures
-    print times
-    print ingredient_indices
-    print action_indices
-
-
     clause = 1
     clause_actions = []
     clause_ingredients = []
@@ -138,7 +126,7 @@ def parse_step(step):
     i = 0
     procedure = recipe_classes.Procedure()
     while i < (len(tokens)):
-        print i, tokens[i]
+        
         t = tokens[i]
 
         if i in action_indices:
@@ -160,7 +148,7 @@ def parse_step(step):
             i += 1
             continue
         else:
-            print '1'
+            poo = 1
 
         if t in separators and i+1 not in ingredient_indices and clause_actions:
             clause += 1
@@ -195,7 +183,7 @@ def parse_step(step):
             i += 1
             continue
         else:
-            print '2'
+            poo = 1
 
         if i in ingredient_indices and tokens[i] not in clause_ingredients:
             if i+1 in ingredient_indices:
@@ -212,14 +200,14 @@ def parse_step(step):
                 i += 1
                 continue
         else:
-            print '3'
+            poo = 1
 
         if t is 'them':
             clause_ingredients = prev_ings
             i += 1
             continue
         else:
-            print '4'
+            poo = 1
 
         if i in time_indices:
             clause_time = tokens[i]+' '+tokens[i+1]
@@ -230,7 +218,7 @@ def parse_step(step):
             i += 2
             continue
         else:
-            print '5'
+            poo = 1
 
         if i in temperature_indices:
             clause_temp = tokens[i]+' '+tokens[i+1]
@@ -241,9 +229,7 @@ def parse_step(step):
             i += 2
             continue
         else:
-            print '6'
-
-        print "end - word: ", t
+            poo = 1
         i += 1
 
     return step_procedures

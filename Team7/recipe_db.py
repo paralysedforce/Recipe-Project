@@ -62,7 +62,8 @@ while (main):
 		db.procedures.insert(kb_item)
 
 	else:
-		print 'Invalid item type'
+		# print 'Invalid item type'
+		poo = 1
 
 	cont = raw_input('\nMore items? [y/n] ')
 	if (cont.upper() == 'N'):
@@ -72,17 +73,17 @@ while (main):
 ingredients = db.ingredients.find()
 procedures = db.procedures.find()
 
-print '\n\n---------------------------------\n\n'
+# print '\n\n---------------------------------\n\n'
 
-print 'INGREDIENTS:\n'
-for record in ingredients:
-	# print(record['name'] + ',',record['category'] + ',',record['flags'])
-	print record['name']
+# print 'INGREDIENTS:\n'
+# for record in ingredients:
+# 	# print(record['name'] + ',',record['category'] + ',',record['flags'])
+# 	print record['name']
 
-print '\nPROCEDURES:\n'
-for record in procedures:
-	# print(record['name'] + ',',record['category'])
-	print record['name']
+# print '\nPROCEDURES:\n'
+# for record in procedures:
+# 	# print(record['name'] + ',',record['category'])
+# 	print record['name']
 
 # cont = raw_input('\nAny modifications to be made? [y/n] \n')
 # if (cont.upper() == 'N'):

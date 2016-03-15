@@ -28,12 +28,10 @@ def parse_ingredient(ingredients):
     processes the string and returns an ingredient object"""
     number = recognize_number(ingredients)
     unit = recognize_unit(ingredients)
-    print ingredients
     ingredients = ingredients.replace(unit, '')
     ingredients = ingredients.replace(str(number), '')
     ingredient_name = recognize_ingredient(ingredients)
     # descriptors = recognize_descriptors(ingredients)
-    print ingredient_name + ' ' + unit + ' ' + str(number)
     ingredient = recipe_classes.Ingredient(ingredient_name, number, unit)
     return ingredient
 
@@ -63,7 +61,6 @@ def recognize_unit(ingredients):
 def recognize_ingredient(ingredients):
     # preprocessing
     ingredient = _strip_punctuation((ingredients.replace('-', ' ')).lower())
-    print '\n\n\n\n\n\n', ingredient
     all_ing_cursor = db.ingredients.find()
     longest_match = ''
     for doc in all_ing_cursor:
@@ -97,8 +94,6 @@ def parse_step(step):
     step_ingredients = []
     step_cookware = []
 
-    print "\n\nPARSING STEP:\n", step, '\n'
-
     # for direction in DIRECTIONS:
     #     if direction in step:
     #         step_directions.append(direction)
@@ -131,12 +126,10 @@ def parse_step(step):
             if variation in step:
                 cookware_set.add(unicode(cookware))
     step_cookware = list(cookware_set)
-    print "Step cookware", step_cookware
 
     #GET TIME AND TEMP FROM STEP
     time = recognize_time(step)
     temp = recognize_temp(step)
-    print step_procedures[0] + ' ' + time + ' ' + temp
     if not step_procedures:
         step_procedures = ['placeholder proc']
     proc = recipe_classes.Procedure(step_procedures[0], step_ingredients, step_cookware, time, temp)
@@ -235,139 +228,84 @@ def main(original_recipe):
     #         'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/',
     #         'http://allrecipes.com/Recipe/Baked-Lemon-Chicken-with-Mushroom-Sauce/',
     #         'http://allrecipes.com/Recipe/Meatball-Nirvana/']
-    scraped_ing, scraped_steps = scrape.scrape(original_recipe.url)
+    if original_recipe.url:
+        scraped_ing, scraped_steps = scrape.scrape(original_recipe.url)
 
-    # parse ingredient info, create objects
-    ingredients = []
-    for ingredient in scraped_ing:
-        new_ing = parse_ingredient(ingredient)
-        cursor = db.ingredients.find({"name":new_ing.name})
-        i = 0
-        for document in cursor:
-            i += 1
-        if i == 0:
-            # add to DB
-            db.ingredients.insert({"name":new_ing.name, "category":"????", "flag":"none"})
-        ingredients.append(new_ing)
+        # parse ingredient info, create objects
+        ingredients = []
+        for ingredient in scraped_ing:
+            new_ing = parse_ingredient(ingredient)
+            cursor = db.ingredients.find({"name":new_ing.name})
+            i = 0
+            for document in cursor:
+                i += 1
+            if i == 0:
+                # add to DB
+                db.ingredients.insert({"name":new_ing.name, "category":"????", "flag":"none"})
+            ingredients.append(new_ing)
 
-    steps = []
-    for step in scraped_steps:
-        #SPLIT STEP CONTENTS BEFORE PARSING
-        if not step:
-            continue # HANDLE EMPTY
-    # for new_parser
-        # parsed_steps = parse_step(step)
-        # for p in parsed_steps:
-        #     steps.append(p)
-    #for new_parser
-        step_sent = nltk.sent_tokenize(step)
-        for sent in step_sent:
-            if contains_procedure(sent) == 1:
-                new_proc = parse_step(sent)
-                steps.append(new_proc)
-            elif contains_procedure(sent) > 1:
-                actions = double_action(sent)
-                if actions:
-                    for a in actions:
-                        new_proc = parse_step(a)
-                        steps.append(new_proc)
-                    if contains_procedure(sent) == 2:
-                        break
-                clause = sent.split(';')
-                for c in clause:
-                    if contains_procedure(c) == 1:
-                        new_proc = parse_step(c)
-                        steps.append(new_proc)
-                    elif contains_procedure(c) > 1:
-                        more_clause = c.split(',')
-                        for more_c in more_clause:
-                            if contains_procedure(more_c) == 1:
-                                new_proc = parse_step(more_c)
-                                steps.append(new_proc)
-                            elif contains_procedure(more_c) > 1:
-                                actions = double_action(more_c)
-                                if actions:
-                                    for a in actions:
-                                        new_proc = parse_step(a)
-                                        steps.append(new_proc)
-                                    if contains_procedure(more_c) == 2:
-                                        break
-                                else:
+        steps = []
+        for step in scraped_steps:
+            #SPLIT STEP CONTENTS BEFORE PARSING
+            if not step:
+                continue # HANDLE EMPTY
+        # for new_parser
+            # parsed_steps = parse_step(step)
+            # for p in parsed_steps:
+            #     steps.append(p)
+        #for new_parser
+            step_sent = nltk.sent_tokenize(step)
+            for sent in step_sent:
+                if contains_procedure(sent) == 1:
+                    new_proc = parse_step(sent)
+                    steps.append(new_proc)
+                elif contains_procedure(sent) > 1:
+                    actions = double_action(sent)
+                    if actions:
+                        for a in actions:
+                            new_proc = parse_step(a)
+                            steps.append(new_proc)
+                        if contains_procedure(sent) == 2:
+                            break
+                    clause = sent.split(';')
+                    for c in clause:
+                        if contains_procedure(c) == 1:
+                            new_proc = parse_step(c)
+                            steps.append(new_proc)
+                        elif contains_procedure(c) > 1:
+                            more_clause = c.split(',')
+                            for more_c in more_clause:
+                                if contains_procedure(more_c) == 1:
                                     new_proc = parse_step(more_c)
                                     steps.append(new_proc)
+                                elif contains_procedure(more_c) > 1:
+                                    actions = double_action(more_c)
+                                    if actions:
+                                        for a in actions:
+                                            new_proc = parse_step(a)
+                                            steps.append(new_proc)
+                                        if contains_procedure(more_c) == 2:
+                                            break
+                                    else:
+                                        new_proc = parse_step(more_c)
+                                        steps.append(new_proc)
 
-
- 
-
-                                # if 'and' in more_c:
-                                #     more_c = more_c.split('and')
-                                #     ings = []
-                                #     for m_c in more_c:
-                                #         for w in m_c:
-                                #             cursor = db.ingredients.find({"name":w})
-                                #             try:
-                                #                 document = cursor[0]
-                                #                 ings.append(document['name'])
-                                #             except:
-                                #                 pass
-                                #     for m_c in more_c:
-                                #         for i in ings:
-                                #             if i not in m_c:
-                                #                 m_c += ' '.join(i)
-                                #         new_proc = parse_step(m_c)
-                                #         steps.append(new_proc)
-                                # if 'then' in more_c:
-                                #     more_c = more_c.split('then')
-                                #     ings = []
-                                #     for m_c in more_c:
-                                #         for w in m_c:
-                                #             cursor = db.ingredients.find({"name":w})
-                                #             try:
-                                #                 document = cursor[0]
-                                #                 ings.append(document['name'])
-                                #             except:
-                                #                 pass
-                                #     for m_c in more_c:
-                                #         for i in ings:
-                                #             if i not in m_c:
-                                #                 m_c += ' '.join(i)
-                                #         new_proc = parse_step(m_c)
-                                #         steps.append(new_proc)
-            
-
-
-
-
-
-            # split_step = sent.split(';')
-
-            # for clause in split_step:
-            #     if contains_procedure(clause) == 1:
-            #         new_proc = parse_step(clause)
-            #     elif contains_procedure(clause) >= 1:
-                    
-            # for clause in split_step:
-            #     clause_step = clause.split(';')
-            #     for s in clause_step:
-            #         # print s
-            #         new_proc = parse_step(s)
-            #         steps.append(new_proc)
-
-    original_recipe.in_list = ingredients
-    original_recipe.pr_list = steps
+        original_recipe.in_list = ingredients
+        original_recipe.pr_list = steps
 
     #call transform etc
     reconstruction.reconstruct(original_recipe)
+    r = original_recipe
     try:
-        transformed_recipe = transform.transform(original_recipe)
+        transformed_recipe = transform.transform(r)
     except RuntimeError:
-        return original_recipe, Recipe()
+        return [original_recipe, Recipe()]
 
     #if transformed_recipe == original_recipe:
     #    print "There are no changes to be made"
     #else:
     reconstruction.reconstruct(transformed_recipe)
-    return original_recipe, transformed_recipe
+    return [original_recipe, transformed_recipe]
 
 
 
